@@ -4,22 +4,21 @@ boost::mutex m;
 session::session(boost::asio::io_service& io_service) : socket_(io_service)  
 {	
 	std::cout << " new session " << std::endl; 
-	maxclients_ = 3;
+	maxclients_ = 5;
 }
 void session::start()
 {
 	// reads data from this session's socket, calls handler
 
-socket_.async_read_some(boost::asio::buffer(data_, max_length),
-    boost::bind(&session::handle_read, this,boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred)
-	);
+	socket_.async_read_some(boost::asio::buffer(data_, max_length),
+		boost::bind(&session::handle_read, this,boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred)
+		);
 }
-void spawnClients(resultsAggregator& ra,std::vector<std::vector<std::string> >v_args)
+void spawnClients(resultsAggregator& ra,std::vector<std::vector<std::string> >v_args, int thread_counter)
 {
-	client c(v_args);
+	client c(v_args,thread_counter);
 	
 	boost::lock_guard<boost::mutex> lock(m);
-	std::cout << " writing to ra... " << std::endl;
 	ra.setResponse(c.getResponseBody());
 }
 void session::handle_read(const boost::system::error_code& error, size_t bytes_transferred)
@@ -29,15 +28,13 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 	resultsAggregator ra;
 	boost::thread_group threads;
 	int total_args_to_run = a.getArgsCount();
+	int thread_counter=0;
 	while(a.getArgsCount()>0)
 	{
 		threads.create_thread(
-			std::bind(&spawnClients,boost::ref(ra),a.get_n(total_args_to_run/maxclients_)));
+			std::bind(&spawnClients,boost::ref(ra),a.get_n(total_args_to_run/maxclients_),thread_counter++));
 	}
-	
 	threads.join_all();
-
-	std::cout << " from ra post thread: " << ra.getResponse() << std::endl;
 
 	aggregate_responses_to_this_session = ra.getResponse();	
 	
