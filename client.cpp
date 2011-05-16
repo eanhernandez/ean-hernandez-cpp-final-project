@@ -99,13 +99,19 @@ void client::handle_read_content(const boost::system::error_code& err, tcp::sock
 {
 	std::istream response_stream(&response_);
 	std::string body;
+	std::string temp_response_body;
 	// stuffing the results in our result string
 	
 	while (std::getline(response_stream, body) && body != "\r")
 	{
-		response_body_.append(body);
+		temp_response_body.append(body);
+
 		response_body_.append(1,'\n');
-		//std::cout << " response body inside client (tc= " << thread_counter_ << "): (" << response_body_ <<")" << std::endl;
+		std::cout << " response body inside client (tc= " << thread_counter_ << "): (" << response_body_ <<")" << std::endl;
+	}
+	if (std::string::npos == temp_response_body.find("404"))
+	{
+		response_body_.append(temp_response_body);
 	}
 	socket_->close();
 }

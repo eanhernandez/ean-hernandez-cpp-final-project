@@ -4,7 +4,7 @@ boost::mutex m;
 session::session(boost::asio::io_service& io_service) : socket_(io_service)  
 {	
 	std::cout << " new session " << std::endl; 
-	maxclients_ = 5;
+	maxclients_ = 50;
 }
 void session::start()
 {
@@ -20,6 +20,7 @@ void spawnClients(resultsAggregator& ra,std::vector<std::vector<std::string> >v_
 	
 	boost::lock_guard<boost::mutex> lock(m);
 	ra.setResponse(c.getResponseBody());
+	
 }
 void session::handle_read(const boost::system::error_code& error, size_t bytes_transferred)
 {
@@ -27,6 +28,7 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 	argsParser a(data_);
 	resultsAggregator ra;
 	boost::thread_group threads;
+	
 	int total_args_to_run = a.getArgsCount();
 	int thread_counter=0;
 	while(a.getArgsCount()>0)
@@ -37,7 +39,7 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 	threads.join_all();
 
 	aggregate_responses_to_this_session = ra.getResponse();	
-	
+	std::cout << " done. " << std::endl;
 	// write data back to original querying system
 	// todo: this should integrate the sets of data returned by the clients created above
     boost::asio::async_write( socket_, boost::asio::buffer(aggregate_responses_to_this_session, aggregate_responses_to_this_session.length()),
