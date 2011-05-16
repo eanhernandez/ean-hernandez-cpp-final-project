@@ -25,18 +25,12 @@ void argsParser::tokenizeArgLine()
     boost::tokenizer<boost::char_separator<char>> tok(s_,sep);
     BOOST_FOREACH(std::string t, tok)
     {
-    v_.push_back(t);
+                std::vector<std::string> inner;
+                inner.push_back("184.73.236.29");
+                inner.push_back(t);
+                
+                v_.push_back(inner);
     }
 }
-std::string argsParser::dumpVector()
-// in case you need to get the vector for debugging
-{
-	std::string s;
-    BOOST_FOREACH(std::string u,v_)
-    {
-		s.append(u);
-		s.append(1,'\n');
-    }
-	return s;
-}
-std::vector<std::string> argsParser::getArgsVector(){return v_;}// getter
+
+std::vector<std::vector<std::string> > argsParser::getArgsVector(){return v_;}// getter

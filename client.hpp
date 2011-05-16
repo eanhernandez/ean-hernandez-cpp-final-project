@@ -9,10 +9,10 @@ using boost::asio::ip::tcp;
 class client
 {
 public:
-	client(const std::string& server, const std::string& path);
+	client(std::vector<std::vector<std::string> >v_args);
 	std::string getResponseBody(){return response_body_;}
-	void start();
-	void operator() ();
+	void start(std::vector<std::string> v_inner);
+	void operator()();
 private:
 	void getConnected(std::string server, std::string path, boost::asio::io_service& io_service, tcp::socket* socket_);
 	void handle_resolve(const boost::system::error_code& err);
@@ -30,4 +30,5 @@ private:
 	std::string getHeader(){return header_;}	
 	std::string server_;
 	std::string path_;
+	std::vector<std::vector<std::string> >v_args_;
 };

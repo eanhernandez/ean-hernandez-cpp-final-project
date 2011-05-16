@@ -15,10 +15,10 @@ socket_.async_read_some(boost::asio::buffer(data_, max_length),
     boost::bind(&session::handle_read, this,boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred)
 	);
 }
-void spawnClients(resultsAggregator& ra,std::string path)
+void spawnClients(resultsAggregator& ra,std::vector<std::vector<std::string> >v_args)
 {
-	client c("184.73.236.29", path);
-	c.start();
+	client c(v_args);
+	
 	boost::lock_guard<boost::mutex> lock(m);
 	std::cout << " writing to ra... " << std::endl;
 	ra.setResponse(c.getResponseBody());
@@ -28,14 +28,15 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 	// chops up data from original request, stores as a list of queries
 	argsParser a(data_);
 	
-	std::vector<std::string> v_args = a.getArgsVector();
+	std::vector<std::vector<std::string> > v_args = a.getArgsVector();
 	resultsAggregator ra;
 	boost::thread_group threads;
-	std::for_each(v_args.begin(),v_args.end(), [&ra, &threads](std::string v)	
-	{
-		threads.create_thread(std::bind(&spawnClients,boost::ref(ra),v));
+	threads.create_thread(std::bind(&spawnClients, boost::ref(ra),v_args));
+	//std::for_each(v_args.begin(),v_args.end(), [&ra, &threads](std::string v)	
+	//{
+	//	threads.create_thread(std::bind(&spawnClients,boost::ref(ra),v));
 		//Sleep(1000);
-	});	
+	//});	
 	threads.join_all();
 
 	std::cout << " from ra post thread: " << ra.getResponse() << std::endl;

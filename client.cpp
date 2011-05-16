@@ -1,16 +1,26 @@
 #include "client.hpp"
 //test change for svn
-client::client(const std::string& server, const std::string& path) : server_(server), path_(path){}
-void client::start()
+client::client(std::vector<std::vector<std::string> >v_args) : v_args_(v_args)
 {
 	std::cout << " starting new client " << std::endl;
-	boost::asio::io_service client_io_service;	
-	tcp::socket* socket_ = new tcp::socket(client_io_service);
-	getConnected(server_, path_, client_io_service, socket_);
+	
+
+	for (unsigned int i=0;i<v_args_.size();++i)
+	{
+		client::start(v_args_.at(i));
+	}
+}
+void client::start(std::vector<std::string> v_inner)
+{
+	boost::asio::io_service client_io_service;
 	client_io_service.run();
+	std::cout << " processing new query " << std::endl;
+	tcp::socket* socket_ = new tcp::socket(client_io_service);
+	getConnected(v_inner.at(0), v_inner.at(1), client_io_service, socket_);
+	
 }
 void client::operator() (){}
-void client::getConnected(std::string server, std::string path, boost::asio::io_service& io_service, 	tcp::socket* socket_ )
+void client::getConnected(std::string server, std::string path, boost::asio::io_service& io_service, tcp::socket* socket_ )
 	
 // wrapper to handle connecting to the remote machine
 {
