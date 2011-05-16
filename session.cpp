@@ -1,6 +1,5 @@
 #include "session.hpp"
 
-
 boost::mutex m;
 session::session(boost::asio::io_service& io_service) : socket_(io_service)  
 {	
@@ -27,16 +26,15 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 {
 	// chops up data from original request, stores as a list of queries
 	argsParser a(data_);
-	
-	std::vector<std::vector<std::string> > v_args = a.getArgsVector();
 	resultsAggregator ra;
 	boost::thread_group threads;
-	threads.create_thread(std::bind(&spawnClients, boost::ref(ra),v_args));
-	//std::for_each(v_args.begin(),v_args.end(), [&ra, &threads](std::string v)	
-	//{
-	//	threads.create_thread(std::bind(&spawnClients,boost::ref(ra),v));
-		//Sleep(1000);
-	//});	
+	int total_args_to_run = a.getArgsCount();
+	while(a.getArgsCount()>0)
+	{
+		threads.create_thread(
+			std::bind(&spawnClients,boost::ref(ra),a.get_n(total_args_to_run/maxclients_)));
+	}
+	
 	threads.join_all();
 
 	std::cout << " from ra post thread: " << ra.getResponse() << std::endl;

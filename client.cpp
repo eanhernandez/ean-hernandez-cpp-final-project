@@ -1,14 +1,12 @@
 #include "client.hpp"
-//test change for svn
+
 client::client(std::vector<std::vector<std::string> >v_args) : v_args_(v_args)
 {
 	std::cout << " starting new client " << std::endl;
-	
-
-	for (unsigned int i=0;i<v_args_.size();++i)
-	{
-		client::start(v_args_.at(i));
-	}
+	//for (unsigned int i=0;i<v_args_.size();++i)
+	//{
+		client::start(v_args_.at(0));
+	//}
 }
 void client::start(std::vector<std::string> v_inner)
 {
@@ -17,7 +15,6 @@ void client::start(std::vector<std::string> v_inner)
 	std::cout << " processing new query " << std::endl;
 	tcp::socket* socket_ = new tcp::socket(client_io_service);
 	getConnected(v_inner.at(0), v_inner.at(1), client_io_service, socket_);
-	
 }
 void client::operator() (){}
 void client::getConnected(std::string server, std::string path, boost::asio::io_service& io_service, tcp::socket* socket_ )
@@ -106,5 +103,6 @@ void client::handle_read_content(const boost::system::error_code& err, tcp::sock
 	{
 		response_body_.append(body);
 		response_body_.append(1,'\n');
+		std::cout << " response body inside client: " << response_body_ << std::endl;
 	}
 }

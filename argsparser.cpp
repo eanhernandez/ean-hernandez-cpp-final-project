@@ -1,5 +1,20 @@
 #include "argsparser.hpp"
 
+int argsParser::getArgsCount()
+{
+	return v_.size();
+}
+std::vector<std::vector<std::string> > argsParser::get_n(int n)
+{
+	if (v_.size()<n)
+	{
+		n = v_.size();
+	}
+	std::vector<std::vector<std::string> > temp;
+	temp.insert(temp.end(), v_.end()-n, v_.end());
+	v_.erase(v_.end()-n,v_.end());
+	return temp;
+}
 argsParser::argsParser(char* s) : s_(s)
 // this just helps to chop things up
 {
