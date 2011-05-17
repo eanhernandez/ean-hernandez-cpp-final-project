@@ -110,6 +110,11 @@ void client::handle_read_content(const boost::system::error_code& err, tcp::sock
 		std::cout << " response received to client in thread " << thread_counter_ << " : " << temp_response_body << std::endl;
 		v_responses_.push_back(temp_response_body);
 	}
+	else
+	{	
+		temp_response_body.resize(20);
+		std::cout << " response received to client in thread " << thread_counter_ << " contained 404 : " << temp_response_body << std::endl;
+	}
 	temp_response_body.clear();
 	socket_->close();
 }
