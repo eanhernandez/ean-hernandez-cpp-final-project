@@ -1,0 +1,1 @@
+this version has multiple threads, each containing a client accepting multiple queries to run.  lots of disconnections at the test browser when we run more than 10 or 20 queries.
