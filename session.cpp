@@ -1,10 +1,9 @@
 #include "session.hpp"
 
 boost::mutex m;
-session::session(boost::asio::io_service& io_service) : socket_(io_service)  
+session::session(boost::asio::io_service& io_service, int maxclients) : socket_(io_service), maxclients_(maxclients)  
 {	
 	std::cout << " new session " << std::endl; 
-	maxclients_ = 100;
 }
 void session::start()
 {
@@ -38,6 +37,7 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 	}
 	threads.join_all();	
 	std::vector<std::string> v_all_responses = ra.getResponse();
+	v_all_responses.push_back("count=" + boost::lexical_cast<std::string>(v_all_responses.size()));
 	aggregate_responses_to_this_session = std::accumulate(v_all_responses.begin(),v_all_responses.end(),std::string(""));	
 	std::cout << " aggregate response : " << aggregate_responses_to_this_session << std::endl;
 	

@@ -9,7 +9,7 @@
 int main(int argc, char* argv[])
 {
     boost::asio::io_service io_service;
-    server s(io_service, 81);			// creates the server listening on port 81
+    server s(io_service, 81, 100);			// creates the server listening on port 81
     io_service.run();					// starts the server
 	return 0;
 }
