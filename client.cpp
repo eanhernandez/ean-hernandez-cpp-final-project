@@ -109,7 +109,7 @@ void client::handle_read_content(const boost::system::error_code& err, tcp::sock
 		response_body_.append(1,'\n');
 		std::cout << " response body inside client (tc= " << thread_counter_ << "): (" << response_body_ <<")" << std::endl;
 	}
-	if (1)//(std::string::npos == temp_response_body.find("404"))
+	if (std::string::npos == temp_response_body.find("404"))
 	{
 		response_body_.append(temp_response_body);
 	}
