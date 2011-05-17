@@ -13,9 +13,8 @@ public:
       argsParser(char* s);
       void narrowToArgLine();
       void tokenizeArgLine();
-	  std::vector<std::vector<std::string> > get_n(int n);
+
       std::vector<std::vector<std::string> > getArgsVector();
-	  int getArgsCount();
 private:
       std::string s_;
       std::vector<std::vector<std::string> > v_;

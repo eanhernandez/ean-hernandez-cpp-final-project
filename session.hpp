@@ -8,9 +8,9 @@
 #include <boost/foreach.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/lambda/lambda.hpp>
-#include "argsparser.hpp"
-#include "resultsAggregator.hpp"
 #include <Windows.h>
+#include "argsparser.hpp"
+#include "client.hpp"
 
 using boost::asio::ip::tcp;
 
