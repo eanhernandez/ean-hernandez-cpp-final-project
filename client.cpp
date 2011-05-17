@@ -1,25 +1,16 @@
 #include "client.hpp"
-
-client::client(std::vector<std::vector<std::string> >v_args,int thread_counter) 
-	: v_args_(v_args), thread_counter_(thread_counter)
+//test change for svn
+client::client(const std::string& server, const std::string& path) : server_(server), path_(path){}
+void client::start()
 {
-	std::cout << " starting new client (tc=" << thread_counter_ << ")" << std::endl;
-	for (unsigned int i=0;i<v_args_.size();++i)
-	{
-		client::start(v_args_.at(i));
-	}
-}
-void client::start(std::vector<std::string> v_inner)
-{
-	boost::asio::io_service client_io_service;
-	
-	std::cout << " processing new query " << std::endl;
+	std::cout << " starting new client " << std::endl;
+	boost::asio::io_service client_io_service;	
 	tcp::socket* socket_ = new tcp::socket(client_io_service);
-	getConnected(v_inner.at(0), v_inner.at(1), client_io_service, socket_);
+	getConnected(server_, path_, client_io_service, socket_);
 	client_io_service.run();
 }
 void client::operator() (){}
-void client::getConnected(std::string server, std::string path, boost::asio::io_service& io_service, tcp::socket* socket_ )
+void client::getConnected(std::string server, std::string path, boost::asio::io_service& io_service, 	tcp::socket* socket_ )
 	
 // wrapper to handle connecting to the remote machine
 {
@@ -99,19 +90,11 @@ void client::handle_read_content(const boost::system::error_code& err, tcp::sock
 {
 	std::istream response_stream(&response_);
 	std::string body;
-	std::string temp_response_body;
 	// stuffing the results in our result string
 	
 	while (std::getline(response_stream, body) && body != "\r")
 	{
-		temp_response_body.append(body);
-
+		response_body_.append(body);
 		response_body_.append(1,'\n');
-		std::cout << " response body inside client (tc= " << thread_counter_ << "): (" << response_body_ <<")" << std::endl;
 	}
-	if (std::string::npos == temp_response_body.find("404"))
-	{
-		response_body_.append(temp_response_body);
-	}
-	socket_->close();
 }

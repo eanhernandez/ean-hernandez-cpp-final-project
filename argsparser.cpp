@@ -1,20 +1,5 @@
 #include "argsparser.hpp"
 
-int argsParser::getArgsCount()
-{
-	return v_.size();
-}
-std::vector<std::vector<std::string> > argsParser::get_n(int n)
-{
-	if (v_.size()<n)
-	{
-		n = v_.size();
-	}
-	std::vector<std::vector<std::string> > temp;
-	temp.insert(temp.end(), v_.end()-n, v_.end());
-	v_.erase(v_.end()-n,v_.end());
-	return temp;
-}
 argsParser::argsParser(char* s) : s_(s)
 // this just helps to chop things up
 {
@@ -40,12 +25,18 @@ void argsParser::tokenizeArgLine()
     boost::tokenizer<boost::char_separator<char>> tok(s_,sep);
     BOOST_FOREACH(std::string t, tok)
     {
-                std::vector<std::string> inner;
-                inner.push_back("184.73.236.29");
-                inner.push_back(t);
-                
-                v_.push_back(inner);
+    v_.push_back(t);
     }
 }
-
-std::vector<std::vector<std::string> > argsParser::getArgsVector(){return v_;}// getter
+std::string argsParser::dumpVector()
+// in case you need to get the vector for debugging
+{
+	std::string s;
+    BOOST_FOREACH(std::string u,v_)
+    {
+		s.append(u);
+		s.append(1,'\n');
+    }
+	return s;
+}
+std::vector<std::string> argsParser::getArgsVector(){return v_;}// getter
