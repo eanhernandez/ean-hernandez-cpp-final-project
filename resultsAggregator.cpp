@@ -1,10 +1,10 @@
 #include "resultsAggregator.hpp"
 resultsAggregator::resultsAggregator(){}
-void resultsAggregator::setResponse(std::string s)
+void resultsAggregator::setResponse(std::vector<std::string> v_s)
 {
-	resultsAggregator::responses_.append(s);
+	v_responses_.insert(v_responses_.end(),v_s.begin(),v_s.end());
 }
-std::string resultsAggregator::getResponse()
+std::vector<std::string> resultsAggregator::getResponse()
 {
-	return responses_;
+	return v_responses_;
 }

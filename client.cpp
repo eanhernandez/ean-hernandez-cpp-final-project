@@ -1,5 +1,4 @@
 #include "client.hpp"
-
 client::client(std::vector<std::vector<std::string> >v_args,int thread_counter) 
 	: v_args_(v_args), thread_counter_(thread_counter)
 {
@@ -109,8 +108,7 @@ void client::handle_read_content(const boost::system::error_code& err, tcp::sock
 	if (std::string::npos == temp_response_body.find("404"))
 	{
 		std::cout << " response received to client in thread " << thread_counter_ << " : " << temp_response_body << std::endl;
-		response_body_.append(1,'\n');
-		response_body_.append(temp_response_body);
+		v_responses_.push_back(temp_response_body);
 	}
 	temp_response_body.clear();
 	socket_->close();

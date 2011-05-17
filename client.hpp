@@ -10,7 +10,7 @@ class client
 {
 public:
 	client(std::vector<std::vector<std::string> >v_args,int thread_counter);
-	std::string getResponseBody(){return response_body_;}
+	std::vector<std::string> getResponseBody(){return client::v_responses_;}
 	void start(std::vector<std::string> v_inner);
 	void operator()();
 private:
@@ -31,5 +31,6 @@ private:
 	std::string server_;
 	std::string path_;
 	std::vector<std::vector<std::string> >v_args_;
+	std::vector<std::string> v_responses_;
 	int thread_counter_;
 };

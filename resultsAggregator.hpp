@@ -5,8 +5,9 @@ class resultsAggregator
 {
 public:
 	resultsAggregator();
-	void setResponse(std::string s);
-	std::string getResponse();
+	void setResponse(std::vector<std::string> v_s);
+	std::vector<std::string> getResponse();
 private:
 	std::string responses_;
+	std::vector<std::string> v_responses_;
 };

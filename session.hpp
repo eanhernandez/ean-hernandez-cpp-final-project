@@ -2,6 +2,8 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <iterator>
+#include <numeric>
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
 #include <boost/tokenizer.hpp>

@@ -4,7 +4,7 @@ boost::mutex m;
 session::session(boost::asio::io_service& io_service) : socket_(io_service)  
 {	
 	std::cout << " new session " << std::endl; 
-	maxclients_ = 1;
+	maxclients_ = 25;
 }
 void session::start()
 {
@@ -34,8 +34,8 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 			std::bind(&spawnClients,boost::ref(ra),a.get_n(total_args_to_run/maxclients_),thread_counter++));
 	}
 	threads.join_all();	
-
-	aggregate_responses_to_this_session = ra.getResponse();	
+	std::vector<std::string> v_all_responses = ra.getResponse();
+	aggregate_responses_to_this_session = std::accumulate(v_all_responses.begin(),v_all_responses.end(),std::string(""));	
 	std::cout << " aggregate response : " << aggregate_responses_to_this_session << std::endl;
 	
 	// write data back to original querying system
@@ -52,9 +52,11 @@ void session::handle_write(const boost::system::error_code& error)
 	}
 	// since this is only going to run once, we will kill the session at this point
 	std::cout << " session is done." << std::endl;
-    //socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-	//socket_.close();
-    delete this;	
+	boost::system::error_code ignored_ec;
+	socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
+	socket_.close();
+
+	delete this;	
 }
 tcp::socket& session::socket() 
 { 
