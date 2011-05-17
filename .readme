@@ -1,1 +1,2 @@
-details about this version will be entered here when a stable version is complete and then branched.
+this version returns a count of transactions processed, this makes debugging easier
+and also highlights the embarrassing "no more than 60" results problem.
