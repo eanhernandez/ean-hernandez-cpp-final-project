@@ -4,7 +4,7 @@ boost::mutex m;
 session::session(boost::asio::io_service& io_service) : socket_(io_service)  
 {	
 	std::cout << " new session " << std::endl; 
-	maxclients_ = 20;
+	maxclients_ = 1;
 }
 void session::start()
 {
@@ -16,8 +16,7 @@ void session::start()
 }
 void spawnClients(resultsAggregator& ra,std::vector<std::vector<std::string> >v_args, int thread_counter)
 {
-	client c(v_args,thread_counter);
-	
+	client c(v_args,thread_counter);	
 	boost::lock_guard<boost::mutex> lock(m);
 	ra.setResponse(c.getResponseBody());
 }
@@ -34,9 +33,10 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 		threads.create_thread(
 			std::bind(&spawnClients,boost::ref(ra),a.get_n(total_args_to_run/maxclients_),thread_counter++));
 	}
-	threads.join_all();
+	threads.join_all();	
 
 	aggregate_responses_to_this_session = ra.getResponse();	
+	std::cout << " aggregate response : " << aggregate_responses_to_this_session << std::endl;
 	
 	// write data back to original querying system
 	// todo: this should integrate the sets of data returned by the clients created above
@@ -46,10 +46,15 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 }
 void session::handle_write(const boost::system::error_code& error)
 {
+	if(error)
+	{
+		std::cout << " error on async_write!!! " << std::endl;
+	}
 	// since this is only going to run once, we will kill the session at this point
-	
-    socket_.close();
-    delete this;
+	std::cout << " session is done." << std::endl;
+    //socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+	//socket_.close();
+    delete this;	
 }
 tcp::socket& session::socket() 
 { 

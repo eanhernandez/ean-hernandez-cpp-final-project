@@ -3,7 +3,7 @@
 client::client(std::vector<std::vector<std::string> >v_args,int thread_counter) 
 	: v_args_(v_args), thread_counter_(thread_counter)
 {
-	std::cout << " starting new client (tc=" << thread_counter_ << ")" << std::endl;
+	std::cout << " starting new client in thread " << thread_counter_ <<  std::endl;
 	for (unsigned int i=0;i<v_args_.size();++i)
 	{
 		client::start(v_args_.at(i));
@@ -13,7 +13,7 @@ void client::start(std::vector<std::string> v_inner)
 {
 	boost::asio::io_service client_io_service;
 	
-	std::cout << " processing new query " << std::endl;
+	std::cout << " processing new query in thread " << thread_counter_ << " : " << v_inner.at(0) << "/" << v_inner.at(1) <<  std::endl;
 	tcp::socket* socket_ = new tcp::socket(client_io_service);
 	getConnected(v_inner.at(0), v_inner.at(1), client_io_service, socket_);
 	client_io_service.run();
@@ -32,7 +32,7 @@ void client::getConnected(std::string server, std::string path, boost::asio::io_
 	 
 	tcp::resolver resolver(io_service); 
 	
-	tcp::resolver::query query(server, "http"); 
+	tcp::resolver::query query(server, "80"); 
 	tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
 	tcp::resolver::iterator end; 
 
@@ -105,13 +105,13 @@ void client::handle_read_content(const boost::system::error_code& err, tcp::sock
 	while (std::getline(response_stream, body) && body != "\r")
 	{
 		temp_response_body.append(body);
-
-		response_body_.append(1,'\n');
-		std::cout << " response body inside client (tc= " << thread_counter_ << "): (" << response_body_ <<")" << std::endl;
 	}
 	if (std::string::npos == temp_response_body.find("404"))
 	{
+		std::cout << " response received to client in thread " << thread_counter_ << " : " << temp_response_body << std::endl;
+		response_body_.append(1,'\n');
 		response_body_.append(temp_response_body);
 	}
+	temp_response_body.clear();
 	socket_->close();
 }
