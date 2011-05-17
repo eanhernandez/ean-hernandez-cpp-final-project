@@ -10,7 +10,7 @@ using boost::asio::ip::tcp;
 class argsParser
 {
 public:
-      argsParser(char* s);
+      argsParser(char* s, int server_type);
       void narrowToArgLine();
       void tokenizeArgLine();
 	  std::vector<std::vector<std::string> > get_n(int n);
@@ -19,4 +19,5 @@ public:
 private:
       std::string s_;
       std::vector<std::vector<std::string> > v_;
+	  int server_type_;
 };

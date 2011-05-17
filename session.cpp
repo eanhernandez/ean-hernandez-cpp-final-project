@@ -1,7 +1,8 @@
 #include "session.hpp"
 
 boost::mutex m;
-session::session(boost::asio::io_service& io_service, int maxclients) : socket_(io_service), maxclients_(maxclients)  
+session::session(boost::asio::io_service& io_service, int maxclients, int server_type) 
+	: socket_(io_service), maxclients_(maxclients) , server_type_(server_type)
 {	
 	std::cout << " new session " << std::endl; 
 }
@@ -22,18 +23,19 @@ void spawnClients(resultsAggregator& ra,std::vector<std::vector<std::string> >v_
 void session::handle_read(const boost::system::error_code& error, size_t bytes_transferred)
 {
 	// chops up data from original request, stores as a list of queries
-	argsParser a(data_);
+	argsParser a(data_,server_type_);
 	resultsAggregator ra;
 	boost::thread_group threads;
 	int total_args_to_run = a.getArgsCount();
 	int thread_counter=0;
-	// we run into problems if there are more threads than queries
-	// todo: clean this up!
 	if(maxclients_ > total_args_to_run){maxclients_ = total_args_to_run;}
 	while(a.getArgsCount()>0)
 	{
 		threads.create_thread(
-			std::bind(&spawnClients,boost::ref(ra),a.get_n(total_args_to_run/maxclients_),thread_counter++));
+			std::bind(&spawnClients,
+				boost::ref(ra),
+				a.get_n(total_args_to_run/maxclients_),
+				thread_counter++));
 	}
 	threads.join_all();	
 	std::vector<std::string> v_all_responses = ra.getResponse();
@@ -41,8 +43,6 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 	aggregate_responses_to_this_session = std::accumulate(v_all_responses.begin(),v_all_responses.end(),std::string(""));	
 	std::cout << " aggregate response : " << aggregate_responses_to_this_session << std::endl;
 	
-	// write data back to original querying system
-	// todo: this should integrate the sets of data returned by the clients created above
     boost::asio::async_write( socket_, boost::asio::buffer(aggregate_responses_to_this_session, aggregate_responses_to_this_session.length()),
         boost::bind(&session::handle_write, this, boost::asio::placeholders::error)
 		);

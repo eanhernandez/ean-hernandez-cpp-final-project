@@ -20,7 +20,7 @@ using boost::asio::ip::tcp;
 class session
 {
 	public:
-		session(boost::asio::io_service& io_service, int maxclients);
+		session(boost::asio::io_service& io_service, int maxclients, int server_type);
 		tcp::socket& socket();
 		void start();
 		void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
@@ -32,4 +32,5 @@ class session
 		char data_[max_length];
 		std::string aggregate_responses_to_this_session; 
 		int maxclients_;
+		int server_type_;
 };

@@ -1,2 +1,0 @@
-this version returns a count of transactions processed, this makes debugging easier
-and also highlights the embarrassing "no more than 60" results problem.

@@ -15,7 +15,7 @@ std::vector<std::vector<std::string> > argsParser::get_n(int n)
 	v_.erase(v_.end()-n,v_.end());
 	return temp;
 }
-argsParser::argsParser(char* s) : s_(s)
+argsParser::argsParser(char* s, int server_type) : s_(s), server_type_(server_type)
 // this just helps to chop things up
 {
     narrowToArgLine();
