@@ -1,0 +1,1 @@
+added some "graceful" shutdown code and the disconnects seem to come less often, but are not eradicated entirely.
