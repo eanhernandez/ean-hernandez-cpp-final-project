@@ -4,7 +4,7 @@ boost::mutex m;
 session::session(boost::asio::io_service& io_service) : socket_(io_service)  
 {	
 	std::cout << " new session " << std::endl; 
-	maxclients_ = 25;
+	maxclients_ = 100;
 }
 void session::start()
 {
@@ -28,6 +28,9 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 	boost::thread_group threads;
 	int total_args_to_run = a.getArgsCount();
 	int thread_counter=0;
+	// we run into problems if there are more threads than queries
+	// todo: clean this up!
+	if(maxclients_ > total_args_to_run){maxclients_ = total_args_to_run;}
 	while(a.getArgsCount()>0)
 	{
 		threads.create_thread(

@@ -25,6 +25,9 @@
     <ClInclude Include="server.hpp" />
     <ClInclude Include="session.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include=".readme" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <Keyword>Win32Proj</Keyword>
     <SccProjectName>Svn</SccProjectName>
