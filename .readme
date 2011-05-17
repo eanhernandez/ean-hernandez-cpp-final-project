@@ -1,0 +1,1 @@
+tried to get the client to run multiple threads within itself, this turned out to be a bad idea.  every function wants "this" as an argument, and it just didn't seem to make as much sense to do this once I got down the road a ways.
