@@ -14,12 +14,6 @@ void session::start()
 		boost::bind(&session::handle_read, this,boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred)
 		);
 }
-void spawnClients(resultsAggregator& ra,std::vector<std::vector<std::string> >v_args, int thread_counter)
-{
-	client c(v_args,thread_counter);	
-	boost::lock_guard<boost::mutex> lock(m);
-	ra.setResponse(c.getResponseBody());
-}
 void session::handle_read(const boost::system::error_code& error, size_t bytes_transferred)
 {
 	// chops up data from original request, stores as a list of queries
@@ -38,7 +32,8 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 	while(a.getArgsCount()>0)
 	{
 		threads.create_thread(
-			std::bind(&spawnClients,
+			boost::bind(&session::spawnClients,
+				this,
 				boost::ref(ra),
 				a.get_n(total_args_to_run/maxclients_),
 				thread_counter++));
@@ -57,6 +52,12 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
     boost::asio::async_write( socket_, boost::asio::buffer(aggregate_responses_to_this_session, aggregate_responses_to_this_session.length()),
         boost::bind(&session::handle_write, this, boost::asio::placeholders::error)
 		);
+}
+void session::spawnClients(resultsAggregator& ra, std::vector<std::vector<std::string> >v_args, int thread_counter)
+{
+	client c(v_args,thread_counter);	
+	boost::lock_guard<boost::mutex> lock(m);
+	ra.setResponse(c.getResponseBody());
 }
 void session::handle_write(const boost::system::error_code& error)
 {
