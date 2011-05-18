@@ -17,7 +17,6 @@ void client::start(std::vector<std::string> v_inner)
 	getConnected(v_inner.at(0), v_inner.at(1), v_inner.at(2), client_io_service, socket_);
 	client_io_service.run();
 }
-void client::operator() (){}
 void client::getConnected(std::string server, std::string port, std::string path, boost::asio::io_service& io_service, tcp::socket* socket_ )
 	
 // wrapper to handle connecting to the remote machine

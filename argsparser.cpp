@@ -1,11 +1,17 @@
 #include "argsparser.hpp"
+#include "configuration_data.hpp"
 
 argsParser::argsParser(char* s, int server_type) : s_(s), server_type_(server_type)
 	// this just helps to chop things up
 {
 	narrowToArgLine();
 	tokenizeArgLine();
-	if (server_type_ == 0){refactorArgsForWorkers();}	// if this is a control server
+	if (server_type_ == 0)	// if this is a control server
+	{		
+		configuration_data config(server_type_,"80");
+		config.addTarget("localhost","81");
+		refactorArgsForWorkers(config);
+	}	
 }
 int argsParser::getArgsCount()
 {
@@ -37,10 +43,40 @@ void argsParser::tokenizeArgLine()
 		v_.push_back(inner);
     }
 }
-void argsParser::refactorArgsForWorkers()
+void argsParser::refactorArgsForWorkers(configuration_data config)
 {	
-	/* todo */ 
+	int queries_per_worker = (this->getArgsCount()/config.v_targets_.size());
+	
+	std::vector<std::vector<std::string> > v_new_queries;
+	std::vector<std::string> v_new_inner;
+	std::string s_new_queries;
+	// for every worker server target
+	for (int i=0;i<=config.v_targets_.size();i++)	
+	{
+		v_new_inner.push_back(config.v_targets_.at(i).at(0));	// add server to new inner
+		v_new_inner.push_back(config.v_targets_.at(i).at(1));	// add port to new inner
+
+		// get one worker's share of the queries
+		std::vector<std::vector<std::string> >temp = this->get_n(queries_per_worker);
+		// loop through all of those queries
+		std::for_each(temp.begin(),temp.end(),[&s_new_queries](std::vector<std::string> query_line)
+		{
+			s_new_queries.append("!");
+			s_new_queries.append(query_line.at(0));
+			s_new_queries.append("!");
+			s_new_queries.append(query_line.at(1));
+			s_new_queries.append("!");
+			s_new_queries.append(query_line.at(2));
+		});
+		v_new_inner.push_back(s_new_queries);	// add new query to new inner
+		v_new_queries.push_back(v_new_inner);
+		v_new_inner.clear();
+	}
+	v_.clear();
+//	std::for_each(v_new_queries.begin(),v_new_queries.end(),v_.end());
+	v_ = v_new_queries;
 }
+
 std::vector<std::vector<std::string> > argsParser::get_n(int n)
 {
 	if (v_.size()<n)

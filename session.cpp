@@ -1,4 +1,5 @@
 #include "session.hpp"
+#include "configuration_data.hpp"
 
 boost::mutex m;
 session::session(boost::asio::io_service& io_service, int maxclients, int server_type) 
@@ -16,6 +17,7 @@ void session::start()
 }
 void session::handle_read(const boost::system::error_code& error, size_t bytes_transferred)
 {
+	configuration_data testc(1,"bla");
 	// chops up data from original request, stores as a list of queries
 	argsParser a(data_,server_type_);
 	// this will hold the results of all clients

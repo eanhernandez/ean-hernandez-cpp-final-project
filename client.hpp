@@ -12,7 +12,7 @@ public:
 	client(std::vector<std::vector<std::string> >v_args,int thread_counter);
 	std::vector<std::string> getResponseBody(){return client::v_responses_;}
 	void start(std::vector<std::string> v_inner);
-	void operator()();
+	
 private:
 	void getConnected(std::string server, std::string port, std::string path, boost::asio::io_service& io_service, tcp::socket* socket_);
 	void handle_resolve(const boost::system::error_code& err);
