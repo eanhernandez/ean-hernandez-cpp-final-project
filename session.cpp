@@ -38,6 +38,7 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 				a.get_n(total_args_to_run/maxclients_),
 				thread_counter++));
 	}
+	
 	// wait until all threads are done
 	threads.join_all();	
 	// get all the different threads' responses from the aggregator (comes in a vector)

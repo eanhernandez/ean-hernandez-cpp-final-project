@@ -2,13 +2,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cpp-final-project", "cpp-final-project.vcxproj", "{63E6B288-3BBE-4F47-54F3-CB60CF793917}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{198541CC-54D1-4E81-82E2-88CBA97047B9}"
-	ProjectSection(SolutionItems) = preProject
-		cpp-final-project.vsmdi = cpp-final-project.vsmdi
-		Local.testsettings = Local.testsettings
-		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True

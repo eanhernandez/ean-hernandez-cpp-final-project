@@ -28,10 +28,9 @@ public:
 
 private:
 	tcp::socket socket_;
-	enum { max_length = 1024 };
+	enum { max_length = 102400 };	//max length query is 100kb
 	char data_[max_length];
 	std::string aggregate_responses_to_this_session; 
 	int maxclients_;
 	int server_type_;
 };
-//	class controllerSession : session{};
