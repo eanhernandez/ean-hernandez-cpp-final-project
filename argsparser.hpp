@@ -4,18 +4,19 @@
 #include <boost/asio.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/foreach.hpp>
-
 using boost::asio::ip::tcp;
 
 class argsParser
 {
 public:
       argsParser(char* s, int server_type);
-      void narrowToArgLine();
+	  int getArgsCount();
+	  void narrowToArgLine();
       void tokenizeArgLine();
+	  void refactorArgsForWorkers();
 	  std::vector<std::vector<std::string> > get_n(int n);
       std::vector<std::vector<std::string> > getArgsVector();
-	  int getArgsCount();
+	  
 private:
       std::string s_;
       std::vector<std::vector<std::string> > v_;
