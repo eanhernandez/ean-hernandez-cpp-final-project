@@ -50,11 +50,13 @@ void argsParser::refactorArgsForWorkers(configuration_data config)
 	std::vector<std::vector<std::string> > v_new_queries;
 	std::vector<std::string> v_new_inner;
 	std::string s_new_queries;
+	std::string new_server;
+	std::string new_port;
 	// for every worker server target
-	for (int i=0;i<=config.v_targets_.size();i++)	
+	for (int i=0;i<config.v_targets_.size();i++)	
 	{
-		v_new_inner.push_back(config.v_targets_.at(i).at(0));	// add server to new inner
-		v_new_inner.push_back(config.v_targets_.at(i).at(1));	// add port to new inner
+		new_server = config.v_targets_.at(i).at(0);	// get new server 
+		new_port = config.v_targets_.at(i).at(1);	// get new port
 
 		// get one worker's share of the queries
 		std::vector<std::vector<std::string> >temp = this->get_n(queries_per_worker);
@@ -63,18 +65,14 @@ void argsParser::refactorArgsForWorkers(configuration_data config)
 		{
 			s_new_queries.append("!");
 			s_new_queries.append(query_line.at(0));
-			s_new_queries.append("!");
+			s_new_queries.append(":");
 			s_new_queries.append(query_line.at(1));
-			s_new_queries.append("!");
+			s_new_queries.append("/");
 			s_new_queries.append(query_line.at(2));
 		});
-		v_new_inner.push_back(s_new_queries);	// add new query to new inner
-		v_new_queries.push_back(v_new_inner);
-		v_new_inner.clear();
+		s_new_queries.append("!");
+		addArg(new_server,new_port,s_new_queries);
 	}
-	v_.clear();
-//	std::for_each(v_new_queries.begin(),v_new_queries.end(),v_.end());
-	v_ = v_new_queries;
 }
 
 std::vector<std::vector<std::string> > argsParser::get_n(int n)
@@ -89,3 +87,11 @@ std::vector<std::vector<std::string> > argsParser::get_n(int n)
 	return temp;
 }
 std::vector<std::vector<std::string> > argsParser::getArgsVector(){return v_;}// getter
+void argsParser::addArg(std::string server, std::string port, std::string query)
+{
+	std::vector<std::string> v_temp;
+	v_temp.push_back(server);
+	v_temp.push_back(port);
+	v_temp.push_back(query);
+	v_.push_back(v_temp);
+}

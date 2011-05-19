@@ -2,6 +2,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cpp-final-project", "cpp-final-project.vcxproj", "{63E6B288-3BBE-4F47-54F3-CB60CF793917}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "client_project", "..\client_project\client_project.vcxproj", "{F1BC6D35-FA75-4D59-991C-1F2574BD6AB9}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -29,6 +31,16 @@ Global
 		{63E6B288-3BBE-4F47-54F3-CB60CF793917}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{63E6B288-3BBE-4F47-54F3-CB60CF793917}.Release|Win32.ActiveCfg = Release|Win32
 		{63E6B288-3BBE-4F47-54F3-CB60CF793917}.Release|Win32.Build.0 = Release|Win32
+		{F1BC6D35-FA75-4D59-991C-1F2574BD6AB9}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{F1BC6D35-FA75-4D59-991C-1F2574BD6AB9}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{F1BC6D35-FA75-4D59-991C-1F2574BD6AB9}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{F1BC6D35-FA75-4D59-991C-1F2574BD6AB9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F1BC6D35-FA75-4D59-991C-1F2574BD6AB9}.Debug|Win32.Build.0 = Debug|Win32
+		{F1BC6D35-FA75-4D59-991C-1F2574BD6AB9}.Release|Any CPU.ActiveCfg = Release|Win32
+		{F1BC6D35-FA75-4D59-991C-1F2574BD6AB9}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{F1BC6D35-FA75-4D59-991C-1F2574BD6AB9}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{F1BC6D35-FA75-4D59-991C-1F2574BD6AB9}.Release|Win32.ActiveCfg = Release|Win32
+		{F1BC6D35-FA75-4D59-991C-1F2574BD6AB9}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
