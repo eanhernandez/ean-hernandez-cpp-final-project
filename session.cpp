@@ -50,6 +50,7 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 	// pull the response vector into a string
 	aggregate_responses_to_this_session = std::accumulate(v_all_responses.begin(),v_all_responses.end(),std::string(""));	
 	// dump to screen for reporting
+	
 	std::cout << " aggregate response : " << aggregate_responses_to_this_session << std::endl;
 	// write back to the original calling client
     boost::asio::async_write( socket_, boost::asio::buffer(aggregate_responses_to_this_session, aggregate_responses_to_this_session.length()),

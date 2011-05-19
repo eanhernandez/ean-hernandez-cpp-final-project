@@ -13,7 +13,6 @@
   <ItemGroup>
     <ClCompile Include="argsparser.cpp" />
     <ClCompile Include="client.cpp" />
-    <ClCompile Include="configuration_data.cpp" />
     <ClCompile Include="configuration_data.hpp" />
     <ClCompile Include="resultsAggregator.cpp" />
     <ClCompile Include="main.cpp" />

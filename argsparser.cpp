@@ -8,9 +8,10 @@ argsParser::argsParser(char* s, int server_type) : s_(s), server_type_(server_ty
 	tokenizeArgLine();
 	if (server_type_ == 0)	// if this is a control server
 	{		
-		configuration_data config(server_type_,"80");
-		config.addTarget("localhost","81");
-		refactorArgsForWorkers(config);
+		configuration_data config(server_type_,"81");
+		config.addTarget("localhost","82");				// ultimately this needs to come from a 
+		//config.addTarget("localhost","83");				// ultimately this needs to come from a 
+		refactorArgsForWorkers(config);					//	a config file that loads up
 	}	
 }
 int argsParser::getArgsCount()
@@ -70,7 +71,7 @@ void argsParser::refactorArgsForWorkers(configuration_data config)
 			s_new_queries.append("/");
 			s_new_queries.append(query_line.at(2));
 		});
-		s_new_queries.append("!");
+		//s_new_queries.append("!");
 		addArg(new_server,new_port,s_new_queries);
 	}
 }
