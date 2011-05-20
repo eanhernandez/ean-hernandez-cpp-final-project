@@ -1,16 +1,17 @@
 #include "argsparser.hpp"
 #include "configuration_data.hpp"
 
-argsParser::argsParser(char* s, int server_type) : s_(s), server_type_(server_type)
+argsParser::argsParser(char* s, int server_type,configuration_data config) 
+	: s_(s), server_type_(server_type)
 	// this just helps to chop things up
 {
 	narrowToArgLine();
 	tokenizeArgLine();
 	if (server_type_ == 0)	// if this is a control server
 	{		
-		configuration_data config(server_type_,"81");
-		config.addTarget("localhost","82");				// ultimately this needs to come from a 
-		config.addTarget("localhost","83");				//	a config file that loads up
+		//configuration_data config(server_type_,"81");
+		//config.addTarget("localhost","82");				// ultimately this needs to come from a 
+		//config.addTarget("localhost","83");				//	a config file that loads up
 		refactorArgsForWorkers(config);					
 	}	
 }

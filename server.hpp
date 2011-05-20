@@ -5,13 +5,14 @@
 #include <boost/tokenizer.hpp>
 #include <boost/foreach.hpp>
 #include "session.hpp"
+#include "configuration_data.hpp"
 using boost::asio::ip::tcp;
 
 class server
 {
 	public:
-	  server(boost::asio::io_service& io_service, short port, int maxclients, int server_type) ;
-	  void handle_accept(session* new_session, const boost::system::error_code& error);
+	  server(boost::asio::io_service& io_service, short port, int maxclients, int server_type, configuration_data config) ;
+	  void handle_accept(session* new_session, const boost::system::error_code& error, configuration_data config);
 
 	private:
 	  boost::asio::io_service& io_service_;

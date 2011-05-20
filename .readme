@@ -1,1 +1,5 @@
-after a horrible night not being able to differentiate session types with inheritance, I fixed the "61 query" problem.  It was a simple config limiting queries to 1024b.  Now the limit is 100kb and it's easily completing 1000 queries in a few seconds.
+this version now starts with command line arguments,
+and will distribute to n clients, or just run on one
+server.  I've noticed that above 500 queries, faults 
+tend to occur, particularly with the compiled .exe 
+version.

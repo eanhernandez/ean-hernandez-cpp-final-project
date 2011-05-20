@@ -13,13 +13,14 @@
 #include <boost/lexical_cast.hpp>
 #include "argsparser.hpp"
 #include "resultsAggregator.hpp"
+#include "configuration_data.hpp"
 
 using boost::asio::ip::tcp;
 
 class session
 {
 public:
-	session(boost::asio::io_service& io_service, int maxclients, int server_type);
+	session(boost::asio::io_service& io_service, int maxclients, int server_type, configuration_data config);
 	tcp::socket& socket();
 	void start();
 	void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
@@ -33,4 +34,5 @@ private:
 	std::string aggregate_responses_to_this_session; 
 	int maxclients_;
 	int server_type_;
+	configuration_data config_;
 };

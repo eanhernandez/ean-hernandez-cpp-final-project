@@ -2,8 +2,8 @@
 #include "configuration_data.hpp"
 
 boost::mutex m;
-session::session(boost::asio::io_service& io_service, int maxclients, int server_type) 
-	: socket_(io_service), maxclients_(maxclients) , server_type_(server_type)
+session::session(boost::asio::io_service& io_service, int maxclients, int server_type, configuration_data config) 
+	: socket_(io_service), maxclients_(maxclients) , server_type_(server_type), config_(config)
 {	
 	std::cout << " new session " << std::endl; 
 }
@@ -19,7 +19,7 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 {
 	
 	// chops up data from original request, stores as a list of queries
-	argsParser a(data_,server_type_);
+	argsParser a(data_,server_type_,config_);
 	// this will hold the results of all clients
 	resultsAggregator ra;
 	// threads to do our work in
@@ -50,7 +50,7 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 	// pull the response vector into a string
 	aggregate_responses_to_this_session = std::accumulate(v_all_responses.begin(),v_all_responses.end(),std::string(""));	
 	// dump to screen for reporting
-	
+	aggregate_responses_to_this_session.insert(0,"\r\n");
 	std::cout << " aggregate response : " << aggregate_responses_to_this_session << std::endl;
 	// write back to the original calling client
     boost::asio::async_write( socket_, boost::asio::buffer(aggregate_responses_to_this_session, aggregate_responses_to_this_session.length()),

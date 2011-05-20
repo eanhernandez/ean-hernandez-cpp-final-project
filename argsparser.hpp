@@ -12,7 +12,7 @@ using boost::asio::ip::tcp;
 class argsParser
 {
 public:
-      argsParser(char* s, int server_type);
+      argsParser(char* s, int server_type, configuration_data config);
 	  int getArgsCount();
 	  void narrowToArgLine();
       void tokenizeArgLine();
