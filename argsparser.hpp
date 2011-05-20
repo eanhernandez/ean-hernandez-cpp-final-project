@@ -18,7 +18,7 @@ public:
       void tokenizeArgLine();
 	  void refactorArgsForWorkers();
 	  void refactorArgsForWorkers(configuration_data config);
-	  void addArg(std::string server, std::string port, std::string query);
+	  void addArg(std::vector<std::string>);
 	  std::vector<std::vector<std::string> > get_n(int n);
       std::vector<std::vector<std::string> > getArgsVector();
 	  

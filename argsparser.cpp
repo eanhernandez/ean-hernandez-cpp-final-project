@@ -10,8 +10,8 @@ argsParser::argsParser(char* s, int server_type) : s_(s), server_type_(server_ty
 	{		
 		configuration_data config(server_type_,"81");
 		config.addTarget("localhost","82");				// ultimately this needs to come from a 
-		//config.addTarget("localhost","83");				// ultimately this needs to come from a 
-		refactorArgsForWorkers(config);					//	a config file that loads up
+		config.addTarget("localhost","83");				//	a config file that loads up
+		refactorArgsForWorkers(config);					
 	}	
 }
 int argsParser::getArgsCount()
@@ -49,7 +49,7 @@ void argsParser::refactorArgsForWorkers(configuration_data config)
 	int queries_per_worker = (this->getArgsCount()/config.v_targets_.size());
 	
 	std::vector<std::vector<std::string> > v_new_queries;
-	std::vector<std::string> v_new_inner;
+	
 	std::string s_new_queries;
 	std::string new_server;
 	std::string new_port;
@@ -71,11 +71,21 @@ void argsParser::refactorArgsForWorkers(configuration_data config)
 			s_new_queries.append("/");
 			s_new_queries.append(query_line.at(2));
 		});
-		//s_new_queries.append("!");
-		addArg(new_server,new_port,s_new_queries);
+		size_t endpos = s_new_queries.find_last_of(" ");
+		if( std::string::npos != endpos )
+		s_new_queries = s_new_queries.substr( 0, endpos );
+		std::cout << "within controller :" << new_server << " - " << new_port << " - " << s_new_queries << std::endl;
+		std::vector<std::string> v_new_inner;
+		v_new_inner.push_back(new_server);
+		v_new_inner.push_back(new_port);
+		v_new_inner.push_back(s_new_queries);
+		v_new_queries.push_back(v_new_inner);
+		s_new_queries.clear();
 	}
+	v_.clear();
+	v_.insert(v_.end(),v_new_queries.begin(),v_new_queries.end());
+		
 }
-
 std::vector<std::vector<std::string> > argsParser::get_n(int n)
 {
 	if (v_.size()<n)
@@ -88,11 +98,7 @@ std::vector<std::vector<std::string> > argsParser::get_n(int n)
 	return temp;
 }
 std::vector<std::vector<std::string> > argsParser::getArgsVector(){return v_;}// getter
-void argsParser::addArg(std::string server, std::string port, std::string query)
+void argsParser::addArg(std::vector<std::string> v)
 {
-	std::vector<std::string> v_temp;
-	v_temp.push_back(server);
-	v_temp.push_back(port);
-	v_temp.push_back(query);
-	v_.push_back(v_temp);
+	v_.push_back(v);
 }

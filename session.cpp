@@ -17,7 +17,7 @@ void session::start()
 }
 void session::handle_read(const boost::system::error_code& error, size_t bytes_transferred)
 {
-	configuration_data testc(1,"bla");
+	
 	// chops up data from original request, stores as a list of queries
 	argsParser a(data_,server_type_);
 	// this will hold the results of all clients
