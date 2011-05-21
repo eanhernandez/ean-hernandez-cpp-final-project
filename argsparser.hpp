@@ -1,3 +1,6 @@
+#ifndef argsparser_h__
+#define argsparser_h__
+
 #include <string>
 #include <iostream>
 #include <boost/bind.hpp>
@@ -5,9 +8,9 @@
 #include <boost/tokenizer.hpp>
 #include <boost/foreach.hpp>
 #include <vector>
-
-class configuration_data;
+#include "configuration_data.hpp"
 using boost::asio::ip::tcp;
+
 
 class argsParser
 {
@@ -27,3 +30,4 @@ private:
       std::vector<std::vector<std::string> > v_;
 	  int server_type_;
 };
+#endif // argsparser_h__

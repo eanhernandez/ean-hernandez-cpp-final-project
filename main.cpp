@@ -5,7 +5,6 @@
 #include <boost/tokenizer.hpp>
 #include <boost/foreach.hpp>
 #include "server.hpp"
-#include "configuration_data.hpp"
 
 int main(int argc, char* argv[])
 {

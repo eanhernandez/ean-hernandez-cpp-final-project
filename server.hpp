@@ -1,3 +1,6 @@
+#ifndef server_h__
+#define server_h__
+
 #include <string>
 #include <iostream>
 #include <boost/bind.hpp>
@@ -5,7 +8,7 @@
 #include <boost/tokenizer.hpp>
 #include <boost/foreach.hpp>
 #include "session.hpp"
-#include "configuration_data.hpp"
+
 using boost::asio::ip::tcp;
 
 class server
@@ -20,3 +23,5 @@ class server
 	  int maxclients_;
 	  int server_type_;
 };
+
+#endif // server_h__

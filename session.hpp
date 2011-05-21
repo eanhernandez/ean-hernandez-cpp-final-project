@@ -1,3 +1,6 @@
+#ifndef session_h__
+#define session_h__
+
 #include <string>
 #include <iostream>
 #include <algorithm>
@@ -11,9 +14,10 @@
 #include <boost/thread/thread.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lexical_cast.hpp>
+
 #include "argsparser.hpp"
 #include "resultsAggregator.hpp"
-#include "configuration_data.hpp"
+
 
 using boost::asio::ip::tcp;
 
@@ -36,3 +40,4 @@ private:
 	int server_type_;
 	configuration_data config_;
 };
+#endif // session_h__

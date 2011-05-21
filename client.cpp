@@ -2,7 +2,7 @@
 client::client(std::vector<std::vector<std::string> >v_args,int thread_counter) 
 	: v_args_(v_args), thread_counter_(thread_counter)
 {
-	std::cout << " starting new client in thread " << thread_counter_ <<  std::endl;
+	//std::cout << " starting new client in thread " << thread_counter_ <<  std::endl;
 	for (unsigned int i=0;i<v_args_.size();++i)
 	{
 		client::start(v_args_.at(i));
@@ -12,7 +12,8 @@ void client::start(std::vector<std::string> v_inner)
 {
 	boost::asio::io_service client_io_service;
 	
-	std::cout << " processing new query in thread " << thread_counter_ << " : " << v_inner.at(0) << "/" << v_inner.at(1) <<  std::endl;
+	//std::cout << " processing new query in thread " << thread_counter_ << " : " << v_inner.at(0) << "/" << v_inner.at(1) <<  std::endl;
+	std::cout << "." ;
 	tcp::socket* socket_ = new tcp::socket(client_io_service);
 	getConnected(v_inner.at(0), v_inner.at(1), v_inner.at(2), client_io_service, socket_);
 	client_io_service.run();
@@ -65,7 +66,9 @@ else
 }
 void client::handle_read_status_line(const boost::system::error_code& err, tcp::socket* socket_ )
 //handle the status line read
+
 {
+	std::cout << "." ;
 	if (!err)
 	{
 		//read the headers
@@ -106,13 +109,13 @@ void client::handle_read_content(const boost::system::error_code& err, tcp::sock
 	}
 	if (std::string::npos == temp_response_body.find("404"))
 	{
-		std::cout << " response received to client in thread " << thread_counter_ << " : " << temp_response_body << std::endl;
+		//std::cout << " response received to client in thread " << thread_counter_ << " : " << temp_response_body << std::endl;
 		v_responses_.push_back(temp_response_body);
 	}
 	else
 	{	
 		temp_response_body.resize(20);
-		std::cout << " response received to client in thread " << thread_counter_ << " contained 404 : " << temp_response_body << std::endl;
+		//std::cout << " response received to client in thread " << thread_counter_ << " contained 404 : " << temp_response_body << std::endl;
 	}
 	temp_response_body.clear();
 	socket_->close();

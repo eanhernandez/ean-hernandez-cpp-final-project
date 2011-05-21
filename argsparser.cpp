@@ -1,5 +1,5 @@
 #include "argsparser.hpp"
-#include "configuration_data.hpp"
+
 
 argsParser::argsParser(char* s, int server_type,configuration_data config) 
 	: s_(s), server_type_(server_type)
@@ -63,7 +63,8 @@ void argsParser::refactorArgsForWorkers(configuration_data config)
 		// get one worker's share of the queries
 		std::vector<std::vector<std::string> >temp = this->get_n(queries_per_worker);
 		// loop through all of those queries
-		std::for_each(temp.begin(),temp.end(),[&s_new_queries](std::vector<std::string> query_line)
+		//std::for_each(temp.begin(),temp.end(),[&s_new_queries](std::vector<std::string> query_line)
+		BOOST_FOREACH(std::vector<std::string> & query_line, temp)
 		{
 			s_new_queries.append("!");
 			s_new_queries.append(query_line.at(0));
@@ -71,7 +72,7 @@ void argsParser::refactorArgsForWorkers(configuration_data config)
 			s_new_queries.append(query_line.at(1));
 			s_new_queries.append("/");
 			s_new_queries.append(query_line.at(2));
-		});
+		}
 		size_t endpos = s_new_queries.find_last_of(" ");
 		if( std::string::npos != endpos )
 		s_new_queries = s_new_queries.substr( 0, endpos );

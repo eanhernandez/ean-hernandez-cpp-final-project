@@ -1,6 +1,10 @@
+#ifndef resultsAggregator_h__
+#define resultsAggregator_h__
+
 #include <iostream>
-#include <boost\thread\mutex.hpp>
+#include <boost/thread/mutex.hpp>
 #include "client.hpp"
+
 class resultsAggregator
 {
 public:
@@ -11,3 +15,4 @@ private:
 	std::string responses_;
 	std::vector<std::string> v_responses_;
 };
+#endif // resultsAggregator_h__

@@ -1,5 +1,5 @@
 #include "session.hpp"
-#include "configuration_data.hpp"
+
 
 boost::mutex m;
 session::session(boost::asio::io_service& io_service, int maxclients, int server_type, configuration_data config) 

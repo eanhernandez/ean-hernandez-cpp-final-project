@@ -1,10 +1,15 @@
+#ifndef client_h__
+#define client_h__
+
 #include <iostream>
 #include <istream>
 #include <ostream>
 #include <string>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#include "configuration_data.hpp"
 using boost::asio::ip::tcp;
+
 
 class client
 {
@@ -34,3 +39,4 @@ private:
 	std::vector<std::string> v_responses_;
 	int thread_counter_;
 };
+#endif // client_h__
