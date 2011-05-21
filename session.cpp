@@ -15,8 +15,11 @@ void session::start()
 		boost::bind(&session::handle_read, this,boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred)
 		);
 }
+
+
 void session::handle_read(const boost::system::error_code& error, size_t bytes_transferred)
 {
+	std::cout << "bytes_transferred: " << bytes_transferred << std::endl;
 	
 	// chops up data from original request, stores as a list of queries
 	argsParser a(data_,server_type_,config_);

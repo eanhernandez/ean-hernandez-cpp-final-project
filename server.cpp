@@ -18,8 +18,9 @@ server::server(boost::asio::io_service& io_service, short port, int maxclients, 
 void server::handle_accept(session* new_session, const boost::system::error_code& error, configuration_data config)
 {
 	// creates a new session for recently received connection, calls itself to wait for another
-
+	
 	new_session->start();
+
 	new_session = new session(io_service_, maxclients_,server_type_,config);
 	acceptor_.async_accept(new_session->socket(),
 	boost::bind(&server::handle_accept, this, new_session, boost::asio::placeholders::error, config));

@@ -1,17 +1,14 @@
 #include "argsparser.hpp"
 
-
 argsParser::argsParser(char* s, int server_type,configuration_data config) 
 	: s_(s), server_type_(server_type)
 	// this just helps to chop things up
 {
 	narrowToArgLine();
 	tokenizeArgLine();
+	std::cout << " received input in parser: " << s_ << std::endl;
 	if (server_type_ == 0)	// if this is a control server
 	{		
-		//configuration_data config(server_type_,"81");
-		//config.addTarget("localhost","82");				// ultimately this needs to come from a 
-		//config.addTarget("localhost","83");				//	a config file that loads up
 		refactorArgsForWorkers(config);					
 	}	
 }
@@ -63,7 +60,6 @@ void argsParser::refactorArgsForWorkers(configuration_data config)
 		// get one worker's share of the queries
 		std::vector<std::vector<std::string> >temp = this->get_n(queries_per_worker);
 		// loop through all of those queries
-		//std::for_each(temp.begin(),temp.end(),[&s_new_queries](std::vector<std::string> query_line)
 		BOOST_FOREACH(std::vector<std::string> & query_line, temp)
 		{
 			s_new_queries.append("!");
@@ -86,7 +82,6 @@ void argsParser::refactorArgsForWorkers(configuration_data config)
 	}
 	v_.clear();
 	v_.insert(v_.end(),v_new_queries.begin(),v_new_queries.end());
-		
 }
 std::vector<std::vector<std::string> > argsParser::get_n(int n)
 {
