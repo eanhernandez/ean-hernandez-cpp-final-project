@@ -20,7 +20,7 @@ void argsParser::narrowToArgLine()
 //gets rid of everything but the argument line
 {
     s_ = s_.substr(0,s_.find("\n"));	// get first line from request, dumping headers, etc
-    s_ = s_.substr(0,s_.find("HTTP"));	// get rid of "HTTP/1.1 at the end of the line 
+    s_ = s_.substr(0,s_.find("%3Cend%3E"));	// get rid of "HTTP/1.1 at the end of the line 
     s_ = s_.substr(s_.find("/")+1);		// get rid of GET and leading "/" at the beginning of the line
 }
 void argsParser::tokenizeArgLine()
@@ -72,6 +72,7 @@ void argsParser::refactorArgsForWorkers(configuration_data config)
 		size_t endpos = s_new_queries.find_last_of(" ");
 		if( std::string::npos != endpos )
 		s_new_queries = s_new_queries.substr( 0, endpos );
+		s_new_queries.append("%3Cend%3E");
 		std::cout << "within controller :" << new_server << " - " << new_port << " - " << s_new_queries << std::endl;
 		std::vector<std::string> v_new_inner;
 		v_new_inner.push_back(new_server);

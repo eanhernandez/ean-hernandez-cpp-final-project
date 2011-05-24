@@ -28,6 +28,7 @@ public:
 	tcp::socket& socket();
 	void start();
 	void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
+	void handle_completed_read(size_t bytes_transferred);
 	void spawnClients(resultsAggregator& ra, std::vector<std::vector<std::string> >v_args, int thread_counter);
 	void handle_write(const boost::system::error_code& error);
 
@@ -35,6 +36,8 @@ private:
 	tcp::socket socket_;
 	enum { max_length = 102400 };	//max length query is 100kb
 	char data_[max_length];
+	char final_data_[max_length];
+	int max_read_data_;
 	std::string aggregate_responses_to_this_session; 
 	int maxclients_;
 	int server_type_;
