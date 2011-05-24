@@ -1,5 +1,4 @@
-this version now starts with command line arguments,
-and will distribute to n clients, or just run on one
-server.  I've noticed that above 500 queries, faults 
-tend to occur, particularly with the compiled .exe 
-version.
+Delays in long reads are less damaging now that I'm handling
+buffers properly, and runs up to 1000 are working well.  It 
+seems that at and beyond this number, there are problems reading
+from the remote server and these are not handled gracefully.
