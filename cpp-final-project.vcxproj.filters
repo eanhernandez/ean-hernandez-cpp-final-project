@@ -33,10 +33,10 @@
     <ClCompile Include="resultsAggregator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="configuration_data.hpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="configuration_data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadAggregatorFunctor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -54,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resultsAggregator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadAggregatorFunctor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -14,6 +14,7 @@
     <ClCompile Include="argsparser.cpp" />
     <ClCompile Include="client.cpp" />
     <ClCompile Include="configuration_data.cpp" />
+    <ClCompile Include="ReadAggregatorFunctor.cpp" />
     <ClCompile Include="resultsAggregator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="server.cpp" />
@@ -22,6 +23,7 @@
   <ItemGroup>
     <ClInclude Include="argsparser.hpp" />
     <ClInclude Include="client.hpp" />
+    <ClInclude Include="ReadAggregatorFunctor.hpp" />
     <ClInclude Include="resultsAggregator.hpp" />
     <ClInclude Include="server.hpp" />
     <ClInclude Include="session.hpp" />

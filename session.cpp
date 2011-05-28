@@ -1,7 +1,9 @@
 #include "session.hpp"
 boost::mutex m;
+
 session::session(boost::asio::io_service& io_service, int maxclients, int server_type, configuration_data config) 
-	: socket_(io_service), maxclients_(maxclients) , server_type_(server_type), config_(config), max_read_data_(0)
+	: socket_(io_service), maxclients_(maxclients) , server_type_(server_type), 
+	config_(config), max_read_data_(0), raf_(ReadAggregatorFunctor())
 {	
 	std::cout << " new session " << std::endl; 
 }
@@ -15,17 +17,11 @@ void session::start()
 }
 void session::handle_read(const boost::system::error_code& error, size_t bytes_transferred)
 {
-	data_[bytes_transferred] = '\0';
-	int i=0;
-	while (data_[i] != '\0')
-	{
-		final_data_[max_read_data_+i] = data_[i];
-		i++;
-	}
-	max_read_data_ = i;
+	// accumulating data from the reads
+	raf_(data_, bytes_transferred);  
 
-	char* c = std::strstr(data_,"%3Cend%3E");
-	if (c)
+	// finds the "<end>" tag that indicates we are at the end of a transmission
+	if (raf_.checkForEndOfTransMission())
 	{
 		std::cout << "completed read" << std::endl;
 		handle_completed_read(max_read_data_);
@@ -33,7 +29,7 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 	else
 	{
 		std::cout << "still reading" << std::endl;
-		socket_.async_read_some(boost::asio::buffer(data_, max_length),
+		socket_.async_read_some(boost::asio::buffer(raf_.GetFinalData(), max_length),
 			boost::bind(&session::handle_read, this,boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred)
 			);
 	}
@@ -44,7 +40,7 @@ void session::handle_completed_read(size_t bytes_transferred)
 	std::cout << "bytes_transferred: " << bytes_transferred << std::endl;
 	
 	// chops up data from original request, stores as a list of queries
-	argsParser a(final_data_,server_type_,config_);
+	argsParser a(raf_.GetFinalData(),server_type_,config_);
 	// this will hold the results of all clients
 	resultsAggregator ra;
 	// threads to do our work in
