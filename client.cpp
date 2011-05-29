@@ -70,7 +70,6 @@ void client::handle_read_status_line(const boost::system::error_code& err, tcp::
 //handle the status line read
 
 {
-	std::cout << "." ;
 	if (!err)
 	{
 		//read the headers
@@ -93,7 +92,7 @@ void client::handle_read_headers(const boost::system::error_code& err, tcp::sock
 		header_.append(header);
 		header_.append(1,'\n');
 	}
-	
+	int foo = 1;
 	// read the rest of the message, this is our data
 	boost::asio::async_read(*socket_, response_, boost::asio::transfer_at_least(1),
 		boost::bind(&client::handle_read_content, this, boost::asio::placeholders::error, socket_));
@@ -104,7 +103,7 @@ void client::handle_read_content(const boost::system::error_code& err, tcp::sock
 	std::string body;
 	std::string temp_response_body;
 	// stuffing the results in our result string
-	
+	std::getline(response_stream, body);
 	while (std::getline(response_stream, body) && body != "\r")
 	{
 		temp_response_body.append(body);
