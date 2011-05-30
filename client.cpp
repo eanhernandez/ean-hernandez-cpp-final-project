@@ -10,14 +10,14 @@ client::client(std::vector<std::vector<std::string> >v_args,int thread_counter)
 }
 void client::start(std::vector<std::string> v_inner)
 {
+
+	std::cout << " thread " << thread_counter_ << " : " << v_inner.at(0) << "/" << v_inner.at(1) <<  std::endl;
+
 	boost::asio::io_service client_io_service;
 	
-	std::cout << " processing new query in thread " << thread_counter_ << " : " << v_inner.at(0) << "/" << v_inner.at(1) <<  std::endl;
-	std::cout << "." ;
 	tcp::socket* socket_ = new tcp::socket(client_io_service);
 
-	ResponseAbstractFactory* raf = new ResponseComingFactory;
-	//Response* this_response = raf->CreateResponse();
+	std::auto_ptr<ResponseAbstractFactory> raf (new ResponseComingFactory());
 	std::auto_ptr<Response> this_response(raf->CreateResponse());
 
 	try
@@ -79,14 +79,14 @@ void client::DoWriteRead(std::string server, std::string port, std::string path,
 	 std::string status_line;
 	 std::istream response_stream(&response);
 	 std::getline(response_stream, status_line);
-	 //std::cout << "status_line: " << status_line << std::endl;
+	 std::cout << "status_line: " << status_line << std::endl;
 	 this_response->Set_Status_Line(status_line);
 	 boost::asio::read_until(*socket_, response, "\r\n\r\n");
 	 
 	 std::string header;
 	 while (std::getline(response_stream, header) && header != "\r")
 	 {
-		 //std::cout << "header: " << header << std::endl;
+		 std::cout << "header: " << header << std::endl;
 		 this_response->Add_Header(header);
 	 }
 
