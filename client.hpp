@@ -9,8 +9,9 @@
 #include <boost/bind.hpp>
 #include "configuration_data.hpp"
 #include "Response.hpp"
-using boost::asio::ip::tcp;
+#include "ResponseAbstractFactory.hpp"
 
+using boost::asio::ip::tcp;
 
 class client
 {
@@ -21,7 +22,7 @@ public:
 	
 private:
 	void getConnected(std::string server, std::string port, boost::asio::io_service& io_service, tcp::socket* socket_);
-	void DoWriteRead(std::string server, std::string port, std::string path, tcp::socket* socket_);
+	void DoWriteRead(std::string server, std::string port, std::string path, tcp::socket* socket_, Response* this_response);
 	void handle_resolve(const boost::system::error_code& err);
 	void handle_connect(const boost::system::error_code& err);
 	void handle_write_request(const boost::system::error_code& err, tcp::socket* socket_ );

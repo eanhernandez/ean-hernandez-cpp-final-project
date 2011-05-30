@@ -15,15 +15,28 @@ void client::start(std::vector<std::string> v_inner)
 	std::cout << " processing new query in thread " << thread_counter_ << " : " << v_inner.at(0) << "/" << v_inner.at(1) <<  std::endl;
 	std::cout << "." ;
 	tcp::socket* socket_ = new tcp::socket(client_io_service);
-	getConnected(v_inner.at(0), v_inner.at(1), client_io_service, socket_);
-	client_io_service.run();
+
+	ResponseAbstractFactory* raf = new ResponseComingFactory;
+	Response* this_response = raf->CreateResponse();
+
 	try
 	{
-		DoWriteRead(v_inner.at(0), v_inner.at(1), v_inner.at(2),  socket_);
+		getConnected(v_inner.at(0), v_inner.at(1), client_io_service, socket_);
+		client_io_service.run();
 	}
 	catch (std::exception e)
 	{
-		std::cout << " error. closing socket and recording error" << std::endl;
+		std::cout << " error getting connected. closing socket and recording error" << std::endl;
+		socket_->close();
+		response_body_ = "error";
+	}
+	try
+	{
+		DoWriteRead(v_inner.at(0), v_inner.at(1), v_inner.at(2), socket_, this_response);
+	}
+	catch (std::exception e)
+	{
+		std::cout << " error getting data from remote server. closing socket and recording error" << std::endl;
 		socket_->close();
 		response_body_ = "error";
 	}
@@ -50,10 +63,8 @@ void client::getConnected(std::string server, std::string port, boost::asio::io_
 		throw boost::system::system_error(error);
 	}	
   }
-void client::DoWriteRead(std::string server, std::string port, std::string path, tcp::socket* socket_)
+void client::DoWriteRead(std::string server, std::string port, std::string path, tcp::socket* socket_, Response* this_response)
 {
-	ReceivedResponse this_response;
-
 	boost::asio::streambuf request_ ;
 	std::ostream request_stream(&request_);
 
@@ -68,15 +79,14 @@ void client::DoWriteRead(std::string server, std::string port, std::string path,
 	 std::istream response_stream(&response);
 	 std::getline(response_stream, status_line);
 	 //std::cout << "status_line: " << status_line << std::endl;
-	 this_response.Set_Status_Line(status_line);
-
+	 this_response->Set_Status_Line(status_line);
 	 boost::asio::read_until(*socket_, response, "\r\n\r\n");
 	 
 	 std::string header;
 	 while (std::getline(response_stream, header) && header != "\r")
 	 {
 		 //std::cout << "header: " << header << std::endl;
-		 this_response.Add_Header(header);
+		 this_response->Add_Header(header);
 	 }
 
 	 std::string body;	 
@@ -91,8 +101,8 @@ void client::DoWriteRead(std::string server, std::string port, std::string path,
 		 temp.append(body);
 		 body.clear();
 	 }
-	 this_response.Set_Body(temp);
-	 v_responses_.push_back(this_response.GetResponseMessage());
+	 this_response->Set_Body(temp);
+	 v_responses_.push_back(this_response->GetResponseMessage());
 	 temp.clear();
 	 socket_->close();
 }
