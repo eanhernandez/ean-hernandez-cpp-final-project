@@ -60,19 +60,29 @@ void Response::setHeaders()
 }
 bool Response::CheckResponseIsValid()
 {
+	// looking for errors in the return vals
+	std::string ok_status_line = "HTTP/1.1 200 OK\r";
 	size_t endpos = body_.find("error");
 	if( std::string::npos != endpos )
 	{
 		return false;
 	}
-	else if (status_line_ != "HTTP/1.1 200 OK")
+	// looking if we did not receive a 200 OK
+	
+	else if (status_line_.compare("HTTP/1.1 200 OK\r")!=0)
 	{
 		return false;
 	}
-	else
+
+	// looking if we got a 404
+	endpos = body_.find("404 Not Found");
+	if (std::string::npos != endpos)
 	{
-		return true;
+		return false;
 	}
+
+	return true;
+	
 	
 
 }

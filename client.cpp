@@ -114,8 +114,16 @@ void client::DoWriteRead(std::string server, std::string port, std::string path,
 	 {
 		 response_count_++;
 	 }
-	 	 
-	 v_responses_.push_back(this_response->GetResponseMessage());
+	 
+	 if (this_response->CheckResponseIsValid()==true)
+	 {
+		 v_responses_.push_back(this_response->GetResponseMessage());
+	 }
+	 else
+	 {
+		 std::cout << "invalid response, dumping it." << std::endl;
+	 }
+	 
 	 temp.clear();
 	 socket_->close();
 	 finished = true;
