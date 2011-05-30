@@ -92,7 +92,7 @@ void client::DoWriteRead(std::string server, std::string port, std::string path,
 		 body.clear();
 	 }
 	 this_response.Set_Body(temp);
-	 v_responses_.push_back(this_response.getHTTPMessageBody());
+	 v_responses_.push_back(this_response.GetResponseMessage());
 	 temp.clear();
 	 socket_->close();
 }

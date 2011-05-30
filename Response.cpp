@@ -25,7 +25,15 @@ void Response::setHeaders()
 	Add_Header("Connection: Keep-Alive");
 	Add_Header("Content-Type: text/html");
 }
-std::string Response::Get_HTTP_Message()
+
+///////////////////////////////////////////////////////////////////////
+// derived classes here
+
+std::string ReceivedResponse::GetResponseMessage()
+{
+	return body_;
+}
+std::string SendableResponse::GetResponseMessage()
 {
 	std::string s;
 
@@ -42,18 +50,7 @@ std::string Response::Get_HTTP_Message()
 
 	return s;
 }
-int Response::Get_HTTP_Message_Length()
+int SendableResponse::Get_HTTP_Message_Length()
 {
-	return Get_HTTP_Message().length();
-}
-
-
-///////////////////////////////////////////////////////////////////////
-
-// derived classes here
-
-
-std::string ReceivedResponse::getHTTPMessageBody()
-{
-	return body_;
+	return GetResponseMessage().length();
 }

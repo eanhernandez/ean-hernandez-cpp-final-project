@@ -19,6 +19,7 @@
 #include "resultsAggregator.hpp"
 #include "ReadAggregatorFunctor.hpp"
 #include "Response.hpp"
+#include "ResponseAbstractFactory.hpp"
 
 using boost::asio::ip::tcp;
 

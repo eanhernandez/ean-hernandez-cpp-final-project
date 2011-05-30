@@ -67,16 +67,18 @@ void session::handle_completed_read(size_t bytes_transferred)
 	std::vector<std::string> v_all_responses = ra.getResponse();
 	
 	// this is what we'll send back to the querying system
-	Response response_for_reply;
+	//SendableResponse response_for_reply;
+	ResponseAbstractFactory* raf = new ResponseGoingFactory;
+	Response* response_for_reply = raf->CreateResponse();
 	// add a count of queries run to the response vector
 	//response_for_reply.Add_Header("Count=" + boost::lexical_cast<std::string>(v_all_responses.size()));
 		
 	// pull the response vector into a string and store in the response object
-	response_for_reply.Set_Body(std::accumulate(v_all_responses.begin(),v_all_responses.end(),std::string("")));	
-	response_for_reply.setHeaders();
+	response_for_reply->Set_Body(std::accumulate(v_all_responses.begin(),v_all_responses.end(),std::string("")));	
+	response_for_reply->setHeaders();
 
 	// write back to the original calling client
-	full_http_response = response_for_reply.Get_HTTP_Message();
+	full_http_response = response_for_reply->GetResponseMessage();
 	std::cout << " aggregate response : " << full_http_response << std::endl;
 
     boost::asio::async_write( socket_, boost::asio::buffer(full_http_response, full_http_response.length()),

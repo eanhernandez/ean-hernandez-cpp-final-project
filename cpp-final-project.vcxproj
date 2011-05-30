@@ -16,6 +16,7 @@
     <ClCompile Include="configuration_data.cpp" />
     <ClCompile Include="ReadAggregatorFunctor.cpp" />
     <ClCompile Include="Response.cpp" />
+    <ClCompile Include="ResponseAbstractFactory.cpp" />
     <ClCompile Include="resultsAggregator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="server.cpp" />
@@ -26,6 +27,7 @@
     <ClInclude Include="client.hpp" />
     <ClInclude Include="Response.hpp" />
     <ClInclude Include="ReadAggregatorFunctor.hpp" />
+    <ClInclude Include="ResponseAbstractFactory.hpp" />
     <ClInclude Include="resultsAggregator.hpp" />
     <ClInclude Include="server.hpp" />
     <ClInclude Include="session.hpp" />
