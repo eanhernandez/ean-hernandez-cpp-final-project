@@ -25,6 +25,7 @@
   <ItemGroup>
     <ClInclude Include="argsparser.hpp" />
     <ClInclude Include="client.hpp" />
+    <ClInclude Include="configuration_data.hpp" />
     <ClInclude Include="Response.hpp" />
     <ClInclude Include="ReadAggregatorFunctor.hpp" />
     <ClInclude Include="ResponseAbstractFactory.hpp" />

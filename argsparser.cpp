@@ -10,7 +10,7 @@ argsParser::argsParser(char* s, int server_type,configuration_data config)
 	//std::cout << " received input in parser: " << s_ << std::endl;
 	if (server_type_ == 0)	// if this is a control server
 	{		
-		refactorArgsForWorkers(config);					
+		refactorArgsForWorkers(config.v_targets_.size(), config.v_targets_);					
 	}	
 }
 int argsParser::GetTotalArgs()
@@ -47,9 +47,10 @@ void argsParser::tokenizeArgLine()
 		v_.push_back(inner);
     }
 }
-void argsParser::refactorArgsForWorkers(configuration_data config)
+template <class T>
+void argsParser::refactorArgsForWorkers(T, std::vector<std::vector<std::string > > v_targets)
 {	
-	int queries_per_worker = (this->getArgsCount()/config.v_targets_.size());
+	int queries_per_worker = (this->getArgsCount()/v_targets.size());
 	
 	std::vector<std::vector<std::string> > v_new_queries;
 	
@@ -57,10 +58,10 @@ void argsParser::refactorArgsForWorkers(configuration_data config)
 	std::string new_server;
 	std::string new_port;
 	// for every worker server target
-	for (unsigned int i=0;i<config.v_targets_.size();i++)	
+	for (T i=0; i<v_targets.size(); i++)	
 	{
-		new_server = config.v_targets_.at(i).at(0);	// get new server 
-		new_port = config.v_targets_.at(i).at(1);	// get new port
+		new_server = v_targets.at(i).at(0);	// get new server 
+		new_port = v_targets.at(i).at(1);	// get new port
 
 		// get one worker's share of the queries
 		std::vector<std::vector<std::string> >temp = this->get_n(queries_per_worker);
@@ -89,11 +90,12 @@ void argsParser::refactorArgsForWorkers(configuration_data config)
 	v_.clear();
 	v_.insert(v_.end(),v_new_queries.begin(),v_new_queries.end());
 }
-std::vector<std::vector<std::string> > argsParser::get_n(int n)
+template <class T>
+std::vector<std::vector<std::string> > argsParser::get_n(T n)
 {
-	if (v_.size()<n)
+	if (boost::lexical_cast<T>(v_.size())<n)
 	{
-		n = v_.size();
+		n = boost::lexical_cast<T>(v_.size());
 	}
 	std::vector<std::vector<std::string> > temp;
 	temp.insert(temp.end(), v_.end()-n, v_.end());

@@ -8,6 +8,7 @@
 #include <boost/tokenizer.hpp>
 #include <boost/foreach.hpp>
 #include <boost/type_traits.hpp>
+#include <boost/lexical_cast.hpp>
 #include <vector>
 #include "configuration_data.hpp"
 using boost::asio::ip::tcp;
@@ -22,9 +23,11 @@ public:
 	  void narrowToArgLine();
       void tokenizeArgLine();
 	  void refactorArgsForWorkers();
-	  void refactorArgsForWorkers(configuration_data config);
+	  template <class T>
+	  void refactorArgsForWorkers(T, std::vector<std::vector<std::string > > v_targets_);
 	  void addArg(std::vector<std::string>);
-	  std::vector<std::vector<std::string> > get_n(int n);
+	  template <class T>
+	  std::vector<std::vector<std::string> > get_n(T n);
       std::vector<std::vector<std::string> > getArgsVector();
 	  
 	  

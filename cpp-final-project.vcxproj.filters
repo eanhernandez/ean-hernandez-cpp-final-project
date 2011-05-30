@@ -71,6 +71,9 @@
     <ClInclude Include="ResponseAbstractFactory.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="configuration_data.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".readme" />
