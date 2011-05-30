@@ -17,7 +17,8 @@ void client::start(std::vector<std::string> v_inner)
 	tcp::socket* socket_ = new tcp::socket(client_io_service);
 
 	ResponseAbstractFactory* raf = new ResponseComingFactory;
-	Response* this_response = raf->CreateResponse();
+	//Response* this_response = raf->CreateResponse();
+	std::auto_ptr<Response> this_response(raf->CreateResponse());
 
 	try
 	{
@@ -63,7 +64,7 @@ void client::getConnected(std::string server, std::string port, boost::asio::io_
 		throw boost::system::system_error(error);
 	}	
   }
-void client::DoWriteRead(std::string server, std::string port, std::string path, tcp::socket* socket_, Response* this_response)
+void client::DoWriteRead(std::string server, std::string port, std::string path, tcp::socket* socket_, std::auto_ptr<Response> this_response)
 {
 	boost::asio::streambuf request_ ;
 	std::ostream request_stream(&request_);

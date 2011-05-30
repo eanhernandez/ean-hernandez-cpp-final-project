@@ -69,7 +69,9 @@ void session::handle_completed_read(size_t bytes_transferred)
 	// this is what we'll send back to the querying system
 	//SendableResponse response_for_reply;
 	ResponseAbstractFactory* raf = new ResponseGoingFactory;
-	Response* response_for_reply = raf->CreateResponse();
+	//Response* response_for_reply = raf->CreateResponse();
+	std::auto_ptr<Response> response_for_reply(raf->CreateResponse());
+
 	// add a count of queries run to the response vector
 	//response_for_reply.Add_Header("Count=" + boost::lexical_cast<std::string>(v_all_responses.size()));
 		
