@@ -17,14 +17,15 @@ public:
 	void Set_Status_Line(std::string s);
 	void Add_Header(std::string s, std::string t);
 	void Add_Header(std::string s);
+	std::string Get_Header(std::string s);
 	void Set_Body(std::string s);
+	bool CheckResponseIsValid();
 	virtual std::string GetResponseMessage()=0;
 	int Get_HTTP_Message_Length();
 	void setHeaders();
 
 protected:
 	std::vector<header_pair> v_headers_;	// TODO: make these tuples
-
 	std::string body_;
 	std::string status_line_;
 };

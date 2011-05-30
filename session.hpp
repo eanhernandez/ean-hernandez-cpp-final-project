@@ -15,6 +15,8 @@
 #include <boost/lambda/lambda.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/timer.hpp>
+#include <cstdlib>
+#include <boost/thread/condition_variable.hpp>
 
 #include "argsparser.hpp"
 #include "resultsAggregator.hpp"

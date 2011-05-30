@@ -17,9 +17,11 @@ class client
 {
 public:
 	client(std::vector<std::vector<std::string> >v_args,int thread_counter);
-	std::vector<std::string> getResponseBody(){return client::v_responses_;}
+	std::vector<std::string> getResponseBody();
 	void start(std::vector<std::string> v_inner);
-	
+	int getResponseCount();
+	bool finished;
+
 private:
 	void getConnected(std::string server, std::string port, boost::asio::io_service& io_service, tcp::socket* socket_);
 	void DoWriteRead(std::string server, std::string port, std::string path, tcp::socket* socket_, std::auto_ptr<Response> this_response);
@@ -30,6 +32,8 @@ private:
 	void handle_read_headers(const boost::system::error_code& err, tcp::socket* socket_ );
 	void handle_read_content(const boost::system::error_code& err, tcp::socket* socket_);
   
+
+	int response_count_;
 	std::string response_body_;
 	std::string header_;
 	boost::asio::streambuf* request_;

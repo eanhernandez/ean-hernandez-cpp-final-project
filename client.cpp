@@ -1,6 +1,6 @@
 #include "client.hpp"
 client::client(std::vector<std::vector<std::string> >v_args,int thread_counter) 
-	: v_args_(v_args), thread_counter_(thread_counter)
+	: v_args_(v_args), thread_counter_(thread_counter), response_count_(0), finished(false)
 {
 	std::cout << " starting new client in thread " << thread_counter_ <<  std::endl;
 	for (unsigned int i=0;i<v_args_.size();++i)
@@ -11,7 +11,7 @@ client::client(std::vector<std::vector<std::string> >v_args,int thread_counter)
 void client::start(std::vector<std::string> v_inner)
 {
 
-	std::cout << " thread " << thread_counter_ << " : " << v_inner.at(0) << "/" << v_inner.at(1) <<  std::endl;
+	//std::cout << " thread " << thread_counter_ << " : " << v_inner.at(0) << "/" << v_inner.at(1) <<  std::endl;
 	boost::asio::io_service client_io_service;
 	tcp::socket* socket_ = new tcp::socket(client_io_service);
 	std::auto_ptr<ResponseAbstractFactory> raf (new ResponseComingFactory());
@@ -27,6 +27,7 @@ void client::start(std::vector<std::string> v_inner)
 		std::cout << " error getting connected. closing socket and recording error" << std::endl;
 		socket_->close();
 		response_body_ = "error";
+		finished = true;
 	}
 	try
 	{
@@ -34,9 +35,10 @@ void client::start(std::vector<std::string> v_inner)
 	}
 	catch (std::exception e)
 	{
-		std::cout << " error getting data from remote server. closing socket and recording error" << std::endl;
+		std::cout << " error getting data from remote server. closing socket and recording error ( " << e.what() << " )" << std::endl;
 		socket_->close();
 		response_body_ = "error";
+		finished = true;
 	}
 }
 void client::getConnected(std::string server, std::string port, boost::asio::io_service& io_service, tcp::socket* socket_ )
@@ -83,7 +85,7 @@ void client::DoWriteRead(std::string server, std::string port, std::string path,
 	 std::string header;
 	 while (std::getline(response_stream, header) && header != "\r")
 	 {
-		 std::cout << "header: " << header << std::endl;
+		 //std::cout << "header: " << header << std::endl;
 		 this_response->Add_Header(header);
 	 }
 
@@ -100,7 +102,26 @@ void client::DoWriteRead(std::string server, std::string port, std::string path,
 		 body.clear();
 	 }
 	 this_response->Set_Body(temp);
+	 std::string ResultCountHeaderValue = this_response->Get_Header("Result-Count");
+	 if (ResultCountHeaderValue!="")
+	 {
+		 response_count_+= std::atoi(ResultCountHeaderValue.c_str());
+	 }
+	 else
+	 {
+		 response_count_++;
+	 }
+	 	 
 	 v_responses_.push_back(this_response->GetResponseMessage());
 	 temp.clear();
 	 socket_->close();
+	 finished = true;
+}
+int client::getResponseCount()
+{
+	return response_count_;
+}
+std::vector<std::string> client::getResponseBody()
+{
+	return client::v_responses_;
 }

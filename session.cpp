@@ -64,6 +64,7 @@ void session::handle_completed_read(size_t bytes_transferred)
 	
 	// wait until all threads are done
 	threads.join_all();	
+
 	// get all the different threads' responses from the aggregator (comes in a vector)
 	std::vector<std::string> v_all_responses = ra.getResponse();
 	
@@ -75,7 +76,7 @@ void session::handle_completed_read(size_t bytes_transferred)
 	response_for_reply->Set_Body(std::accumulate(v_all_responses.begin(),v_all_responses.end(),std::string("")));	
 	
 	// add some headers
-	response_for_reply->Add_Header("Result-Count", boost::lexical_cast<std::string>(v_all_responses.size()));
+	response_for_reply->Add_Header("Result-Count", boost::lexical_cast<std::string>(ra.getResponseCount()));
 	response_for_reply->Add_Header("Query-Time",boost::lexical_cast<std::string>(query_timer.elapsed()));
 
 	// calculate and set standard headers
@@ -92,9 +93,14 @@ void session::handle_completed_read(size_t bytes_transferred)
 void session::spawnClients(resultsAggregator& ra, std::vector<std::vector<std::string> >v_args, int thread_counter)
 {
 	client c(v_args,thread_counter);	
+	while (c.finished==false)
+	{
+		Sleep(200);
+	}
 	boost::lock_guard<boost::mutex> lock(m);
 	ra.setResponse(c.getResponseBody());
-}
+	ra.incrementResponseCount(c.getResponseCount());
+} 
 void session::handle_write(const boost::system::error_code& error)
 {
 	if(error)
