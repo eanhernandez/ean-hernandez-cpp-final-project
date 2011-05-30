@@ -57,7 +57,7 @@ void argsParser::refactorArgsForWorkers(configuration_data config)
 	std::string new_server;
 	std::string new_port;
 	// for every worker server target
-	for (int i=0;i<config.v_targets_.size();i++)	
+	for (unsigned int i=0;i<config.v_targets_.size();i++)	
 	{
 		new_server = config.v_targets_.at(i).at(0);	// get new server 
 		new_port = config.v_targets_.at(i).at(1);	// get new port

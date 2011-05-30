@@ -7,6 +7,7 @@
 #include <boost/asio.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/foreach.hpp>
+#include <boost/type_traits.hpp>
 #include <vector>
 #include "configuration_data.hpp"
 using boost::asio::ip::tcp;
