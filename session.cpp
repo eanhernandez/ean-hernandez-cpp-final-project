@@ -36,8 +36,6 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 }
 void session::handle_completed_read(size_t bytes_transferred)
 {
-	std::cout << "bytes_transferred: " << bytes_transferred << std::endl;
-	
 	// chops up data from original request, stores as a list of queries
 	argsParser a(raf_.GetFinalData(),server_type_,config_);
 	// this will hold the results of all clients
@@ -50,6 +48,9 @@ void session::handle_completed_read(size_t bytes_transferred)
 	int thread_counter=0;
 	// removes the possibility of empty threads
 	if(maxclients_ > total_args_to_run){maxclients_ = total_args_to_run;}
+	// timer 
+	boost::timer query_timer;
+
 	// create each thread with the aggregator, the queries it will run, and the counter
 	while(a.getArgsCount()>0)
 	{
@@ -70,18 +71,20 @@ void session::handle_completed_read(size_t bytes_transferred)
 	std::auto_ptr<ResponseAbstractFactory> raf (new ResponseGoingFactory());
 	std::auto_ptr<Response> response_for_reply(raf->CreateResponse());
 
-	// add a count of queries run to the response vector
-	//response_for_reply->Add_Header("Count: " + boost::lexical_cast<std::string>(v_all_responses.size()));
-		
 	// pull the response vector into a string and store in the response object
 	response_for_reply->Set_Body(std::accumulate(v_all_responses.begin(),v_all_responses.end(),std::string("")));	
 	
+	// add some headers
+	response_for_reply->Add_Header("Result-Count", boost::lexical_cast<std::string>(v_all_responses.size()));
+	response_for_reply->Add_Header("Query-Time",boost::lexical_cast<std::string>(query_timer.elapsed()));
+
+	// calculate and set standard headers
 	response_for_reply->setHeaders();
 
-	// write back to the original calling client
-	full_http_response = response_for_reply->GetResponseMessage();
+	full_http_response = response_for_reply->GetResponseMessage();	// TODO: can I use move here?
 	std::cout << " aggregate response : " << full_http_response << std::endl;
 
+	// write back to the original calling client
     boost::asio::async_write( socket_, boost::asio::buffer(full_http_response, full_http_response.length()),
         boost::bind(&session::handle_write, this, boost::asio::placeholders::error)
 		);

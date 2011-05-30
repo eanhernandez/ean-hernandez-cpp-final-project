@@ -12,11 +12,8 @@ void client::start(std::vector<std::string> v_inner)
 {
 
 	std::cout << " thread " << thread_counter_ << " : " << v_inner.at(0) << "/" << v_inner.at(1) <<  std::endl;
-
 	boost::asio::io_service client_io_service;
-	
 	tcp::socket* socket_ = new tcp::socket(client_io_service);
-
 	std::auto_ptr<ResponseAbstractFactory> raf (new ResponseComingFactory());
 	std::auto_ptr<Response> this_response(raf->CreateResponse());
 

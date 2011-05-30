@@ -14,6 +14,7 @@
 #include <boost/thread/thread.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/timer.hpp>
 
 #include "argsparser.hpp"
 #include "resultsAggregator.hpp"
