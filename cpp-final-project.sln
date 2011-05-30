@@ -2,8 +2,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cpp-final-project", "cpp-final-project.vcxproj", "{63E6B288-3BBE-4F47-54F3-CB60CF793917}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testing", "testing\testing.vcxproj", "{2ABCC177-EC24-4FE4-8DB1-028ED3336B4D}"
-EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -35,18 +33,6 @@ Global
 		{63E6B288-3BBE-4F47-54F3-CB60CF793917}.Release|Win32.ActiveCfg = Release|Win32
 		{63E6B288-3BBE-4F47-54F3-CB60CF793917}.Release|Win32.Build.0 = Release|Win32
 		{63E6B288-3BBE-4F47-54F3-CB60CF793917}.Release|x86.ActiveCfg = Release|Win32
-		{2ABCC177-EC24-4FE4-8DB1-028ED3336B4D}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{2ABCC177-EC24-4FE4-8DB1-028ED3336B4D}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{2ABCC177-EC24-4FE4-8DB1-028ED3336B4D}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{2ABCC177-EC24-4FE4-8DB1-028ED3336B4D}.Debug|Win32.ActiveCfg = Debug|Win32
-		{2ABCC177-EC24-4FE4-8DB1-028ED3336B4D}.Debug|Win32.Build.0 = Debug|Win32
-		{2ABCC177-EC24-4FE4-8DB1-028ED3336B4D}.Debug|x86.ActiveCfg = Debug|Win32
-		{2ABCC177-EC24-4FE4-8DB1-028ED3336B4D}.Release|Any CPU.ActiveCfg = Release|Win32
-		{2ABCC177-EC24-4FE4-8DB1-028ED3336B4D}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{2ABCC177-EC24-4FE4-8DB1-028ED3336B4D}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{2ABCC177-EC24-4FE4-8DB1-028ED3336B4D}.Release|Win32.ActiveCfg = Release|Win32
-		{2ABCC177-EC24-4FE4-8DB1-028ED3336B4D}.Release|Win32.Build.0 = Release|Win32
-		{2ABCC177-EC24-4FE4-8DB1-028ED3336B4D}.Release|x86.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
