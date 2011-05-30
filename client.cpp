@@ -15,20 +15,23 @@ void client::start(std::vector<std::string> v_inner)
 	std::cout << " processing new query in thread " << thread_counter_ << " : " << v_inner.at(0) << "/" << v_inner.at(1) <<  std::endl;
 	std::cout << "." ;
 	tcp::socket* socket_ = new tcp::socket(client_io_service);
-	getConnected(v_inner.at(0), v_inner.at(1), v_inner.at(2), client_io_service, socket_);
+	getConnected(v_inner.at(0), v_inner.at(1), client_io_service, socket_);
 	client_io_service.run();
+	try
+	{
+		DoWriteRead(v_inner.at(0), v_inner.at(1), v_inner.at(2),  socket_);
+	}
+	catch (std::exception e)
+	{
+		std::cout << " error. closing socket and recording error" << std::endl;
+		socket_->close();
+		response_body_ = "error";
+	}
 }
-void client::getConnected(std::string server, std::string port, std::string path, boost::asio::io_service& io_service, tcp::socket* socket_ )
+void client::getConnected(std::string server, std::string port, boost::asio::io_service& io_service, tcp::socket* socket_ )
 	
 // wrapper to handle connecting to the remote machine
 {
-	request_ = new boost::asio::streambuf;
-	std::ostream request_stream(request_);
-     
-	request_stream << "GET /" << path << " HTTP/1.0\r\n" ;
-	request_stream << "Host: " << server << "\r\n";
-	request_stream << "Accept: */*\r\n" << "Connection: close\r\n\r\n";
-	 
 	tcp::resolver resolver(io_service); 
 	
 	tcp::resolver::query query(server, port); 
@@ -44,80 +47,52 @@ void client::getConnected(std::string server, std::string port, std::string path
 	}
 	if(error) 
 	{			
-		std::cout << " BOOM " << std::endl;
 		throw boost::system::system_error(error);
-
 	}	
-	// after setting up, write
-	boost::asio::async_write(*socket_, *request_,
-	boost::bind(&client::handle_write_request, this, boost::asio::placeholders::error, socket_ ));
   }
-void client::handle_write_request(const boost::system::error_code& err, tcp::socket* socket_)
-// handle whatever comes from the write
+void client::DoWriteRead(std::string server, std::string port, std::string path, tcp::socket* socket_)
 {
-if (!err)
-{
-	//read the status line
-	boost::asio::async_read_until(*socket_, response_, "\r\n",
-		boost::bind(&client::handle_read_status_line, this, boost::asio::placeholders::error, socket_ ));
-}
-else
-{
-	std::cout << "err on handle_write_request" << std::endl;
-}
-}
-void client::handle_read_status_line(const boost::system::error_code& err, tcp::socket* socket_ )
-//handle the status line read
+	ReceivedResponse this_response;
 
-{
-	if (!err)
-	{
-		//read the headers
-		boost::asio::async_read_until(*socket_, response_, "\r\n\r\n",
-			boost::bind(&client::handle_read_headers, this, boost::asio::placeholders::error, socket_ ));
-	}
-	else
-	{
-		std::cout << " blew up reading headers " << std::endl;
-	}
-}
-void client::handle_read_headers(const boost::system::error_code& err, tcp::socket* socket_)
-//handle the headers read
-{
-	std::istream response_stream(&response_);
-	std::string header;
-	// read to the end of the headers
-	while (std::getline(response_stream, header) && header != "\r")
-	{
-		header_.append(header);
-		header_.append(1,'\n');
-	}
-	int foo = 1;
-	// read the rest of the message, this is our data
-	boost::asio::async_read(*socket_, response_, boost::asio::transfer_at_least(1),
-		boost::bind(&client::handle_read_content, this, boost::asio::placeholders::error, socket_));
-  }
-void client::handle_read_content(const boost::system::error_code& err, tcp::socket* socket_)
-{
-	std::istream response_stream(&response_);
-	std::string body;
-	std::string temp_response_body;
-	// stuffing the results in our result string
-	std::getline(response_stream, body);
-	while (std::getline(response_stream, body) && body != "\r")
-	{
-		temp_response_body.append(body);
-	}
-	if (std::string::npos == temp_response_body.find("404"))
-	{
-		std::cout << " response received to client in thread " << thread_counter_ << " : " << temp_response_body << std::endl;
-		v_responses_.push_back(temp_response_body);
-	}
-	else
-	{	
-		temp_response_body.resize(20);
-		std::cout << " response received to client in thread " << thread_counter_ << " contained 404 : " << temp_response_body << std::endl;
-	}
-	temp_response_body.clear();
-	socket_->close();
+	boost::asio::streambuf request_ ;
+	std::ostream request_stream(&request_);
+
+	request_stream << "GET /" << path << " HTTP/1.0\r\n" ;
+	request_stream << "Host: " << server << "\r\n";
+	request_stream << "Accept: */*\r\n" << "Connection: close\r\n\r\n";
+
+	 boost::asio::write(*socket_, request_);
+	 boost::asio::streambuf response;
+	 boost::asio::read_until(*socket_, response, "\r\n");
+	 std::string status_line;
+	 std::istream response_stream(&response);
+	 std::getline(response_stream, status_line);
+	 //std::cout << "status_line: " << status_line << std::endl;
+	 this_response.Set_Status_Line(status_line);
+
+	 boost::asio::read_until(*socket_, response, "\r\n\r\n");
+	 
+	 std::string header;
+	 while (std::getline(response_stream, header) && header != "\r")
+	 {
+		 //std::cout << "header: " << header << std::endl;
+		 this_response.Add_Header(header);
+	 }
+
+	 std::string body;	 
+	 boost::system::error_code error = boost::asio::error::host_not_found;
+	 int foo = 1;
+	 while (boost::asio::read(*socket_, response, boost::asio::transfer_at_least(1), error))
+	 {}
+	 std::string temp;
+	 while (std::getline(response_stream, body))
+	 {
+		 //std::cout << "body: " << body << std::endl;
+		 temp.append(body);
+		 body.clear();
+	 }
+	 this_response.Set_Body(temp);
+	 v_responses_.push_back(this_response.getHTTPMessageBody());
+	 temp.clear();
+	 socket_->close();
 }

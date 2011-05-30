@@ -18,6 +18,13 @@ public:
 private:
 	std::string status_line_;
 	std::vector<std::string> v_headers_;	// make these tuples
+protected:
 	std::string body_;
+};
+
+class ReceivedResponse : public Response
+{
+public:
+	std::string getHTTPMessageBody();
 };
 #endif

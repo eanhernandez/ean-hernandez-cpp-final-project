@@ -18,6 +18,7 @@
 #include "argsparser.hpp"
 #include "resultsAggregator.hpp"
 #include "ReadAggregatorFunctor.hpp"
+#include "Response.hpp"
 
 using boost::asio::ip::tcp;
 
@@ -39,7 +40,7 @@ private:
 	char data_[max_length];
 	//char final_data_[max_length];
 	int max_read_data_;
-	std::string aggregate_responses_to_this_session; 
+	std::string full_http_response; 
 	int maxclients_;
 	int server_type_;
 	configuration_data config_;

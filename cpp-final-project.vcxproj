@@ -15,6 +15,7 @@
     <ClCompile Include="client.cpp" />
     <ClCompile Include="configuration_data.cpp" />
     <ClCompile Include="ReadAggregatorFunctor.cpp" />
+    <ClCompile Include="Response.cpp" />
     <ClCompile Include="resultsAggregator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="server.cpp" />
@@ -23,6 +24,7 @@
   <ItemGroup>
     <ClInclude Include="argsparser.hpp" />
     <ClInclude Include="client.hpp" />
+    <ClInclude Include="Response.hpp" />
     <ClInclude Include="ReadAggregatorFunctor.hpp" />
     <ClInclude Include="resultsAggregator.hpp" />
     <ClInclude Include="server.hpp" />

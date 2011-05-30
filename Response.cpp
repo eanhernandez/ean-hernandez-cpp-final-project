@@ -21,8 +21,9 @@ void Response::setHeaders()
 	Add_Header("Date: today");
 	Add_Header("Server: multislammer");
 	Add_Header("Content-Length:" + boost::lexical_cast<std::string>(body_.length()));
+	Add_Header("Keep-Alive:	timeout=15, max=99");
+	Add_Header("Connection: Keep-Alive");
 	Add_Header("Content-Type: text/html");
-	Add_Header("Connection: close");
 }
 std::string Response::Get_HTTP_Message()
 {
@@ -36,7 +37,7 @@ std::string Response::Get_HTTP_Message()
 		s.append("\n");
 	});
 	s.append("\r\n\r\n");
-	s.append(body_);
+	s.append(body_);	
 	s.append("\r");
 
 	return s;
@@ -44,4 +45,15 @@ std::string Response::Get_HTTP_Message()
 int Response::Get_HTTP_Message_Length()
 {
 	return Get_HTTP_Message().length();
+}
+
+
+///////////////////////////////////////////////////////////////////////
+
+// derived classes here
+
+
+std::string ReceivedResponse::getHTTPMessageBody()
+{
+	return body_;
 }

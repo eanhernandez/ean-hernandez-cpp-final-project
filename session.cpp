@@ -34,7 +34,6 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 			);
 	}
 }
-
 void session::handle_completed_read(size_t bytes_transferred)
 {
 	std::cout << "bytes_transferred: " << bytes_transferred << std::endl;
@@ -66,15 +65,21 @@ void session::handle_completed_read(size_t bytes_transferred)
 	threads.join_all();	
 	// get all the different threads' responses from the aggregator (comes in a vector)
 	std::vector<std::string> v_all_responses = ra.getResponse();
+	
+	// this is what we'll send back to the querying system
+	Response response_for_reply;
 	// add a count of queries run to the response vector
-	v_all_responses.push_back("count=" + boost::lexical_cast<std::string>(v_all_responses.size()));
-	// pull the response vector into a string
-	aggregate_responses_to_this_session = std::accumulate(v_all_responses.begin(),v_all_responses.end(),std::string(""));	
-	// dump to screen for reporting
-	aggregate_responses_to_this_session.insert(0,"\r\n");
-	std::cout << " aggregate response : " << aggregate_responses_to_this_session << std::endl;
+	//response_for_reply.Add_Header("Count=" + boost::lexical_cast<std::string>(v_all_responses.size()));
+		
+	// pull the response vector into a string and store in the response object
+	response_for_reply.Set_Body(std::accumulate(v_all_responses.begin(),v_all_responses.end(),std::string("")));	
+	response_for_reply.setHeaders();
+
 	// write back to the original calling client
-    boost::asio::async_write( socket_, boost::asio::buffer(aggregate_responses_to_this_session, aggregate_responses_to_this_session.length()),
+	full_http_response = response_for_reply.Get_HTTP_Message();
+	std::cout << " aggregate response : " << full_http_response << std::endl;
+
+    boost::asio::async_write( socket_, boost::asio::buffer(full_http_response, full_http_response.length()),
         boost::bind(&session::handle_write, this, boost::asio::placeholders::error)
 		);
 }
