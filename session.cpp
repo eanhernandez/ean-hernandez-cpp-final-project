@@ -21,7 +21,7 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 	raf_(data_, bytes_transferred);  
 
 	// finds the "<end>" tag that indicates we are at the end of a transmission
-	if (raf_.checkForEndOfTransMission())
+	if (raf_.checkForEndOfTransMission())  // TODO: Get rid of this, just read to EOF
 	{
 		std::cout << "completed read" << std::endl;
 		handle_completed_read(max_read_data_);
@@ -44,6 +44,7 @@ void session::handle_completed_read(size_t bytes_transferred)
 	boost::thread_group threads;
 	// how many queries have we been passed to run
 	int total_args_to_run = a.getArgsCount();
+	std::cout << "processing " << a.GetTotalArgs() << " queries in " << total_args_to_run << " sets." << std::endl;
 	// this allows us to give each thread a number
 	int thread_counter=0;
 	// removes the possibility of empty threads
@@ -77,14 +78,15 @@ void session::handle_completed_read(size_t bytes_transferred)
 	
 	// add some headers
 	response_for_reply->Add_Header("Result-Count", boost::lexical_cast<std::string>(ra.getResponseCount()));
-	response_for_reply->Add_Header("Query-Time",boost::lexical_cast<std::string>(query_timer.elapsed()));
+	double how_long_thess_queries_took = query_timer.elapsed();
+	response_for_reply->Add_Header("Query-Time",boost::lexical_cast<std::string>(how_long_thess_queries_took));
 
 	// calculate and set standard headers
 	response_for_reply->setHeaders();
 
 	full_http_response = response_for_reply->GetResponseMessage();	// TODO: can I use move here?
-	std::cout << " aggregate response : " << full_http_response << std::endl;
-
+	//std::cout << " aggregate response : " << full_http_response << std::endl;
+	std::cout << std::endl << "processed " << ra.getResponseCount() << " queries in " << how_long_thess_queries_took << " seconds." << std::endl;
 	// write back to the original calling client
     boost::asio::async_write( socket_, boost::asio::buffer(full_http_response, full_http_response.length()),
         boost::bind(&session::handle_write, this, boost::asio::placeholders::error)

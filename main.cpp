@@ -14,6 +14,16 @@ int main(int argc, char* argv[])
 		std::cout << " usage: port max_threads [0|1]{controller=0, worker=1} target1 port1 target2 port2... target10 port10" << std::endl;
 		return 1;
 	}	
+	std::cout << "!multislammer!" << std::endl;
+	if (atoi(argv[3])==0)
+	{
+		std::cout << "This is a control server" << std::endl;
+	}
+	else
+	{
+		std::cout << "This is a worker server" << std::endl;
+	}
+	std::cout << "t = new thread, . = successful query" << std::endl;
 	configuration_data c(std::atoi(argv[3]), std::string(argv[1]));
 	for (int i=4;i<argc;i++)
 	{

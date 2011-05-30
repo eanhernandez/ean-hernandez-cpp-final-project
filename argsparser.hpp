@@ -16,7 +16,8 @@ class argsParser
 {
 public:
       argsParser(char* s, int server_type, configuration_data config);
-	  int getArgsCount();
+	  int getArgsCount();	// this is for after any worker refactoring
+	  int GetTotalArgs();	// this is for total args passed into the parser
 	  void narrowToArgLine();
       void tokenizeArgLine();
 	  void refactorArgsForWorkers();
@@ -25,9 +26,11 @@ public:
 	  std::vector<std::vector<std::string> > get_n(int n);
       std::vector<std::vector<std::string> > getArgsVector();
 	  
+	  
 private:
       std::string s_;
       std::vector<std::vector<std::string> > v_;
 	  int server_type_;
+	  int total_args;
 };
 #endif // argsparser_h__

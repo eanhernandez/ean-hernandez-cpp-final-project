@@ -6,11 +6,16 @@ argsParser::argsParser(char* s, int server_type,configuration_data config)
 {
 	narrowToArgLine();
 	tokenizeArgLine();
-	std::cout << " received input in parser: " << s_ << std::endl;
+	total_args = v_.size();
+	//std::cout << " received input in parser: " << s_ << std::endl;
 	if (server_type_ == 0)	// if this is a control server
 	{		
 		refactorArgsForWorkers(config);					
 	}	
+}
+int argsParser::GetTotalArgs()
+{
+	return total_args;
 }
 int argsParser::getArgsCount()
 {
@@ -73,7 +78,7 @@ void argsParser::refactorArgsForWorkers(configuration_data config)
 		if( std::string::npos != endpos )
 		s_new_queries = s_new_queries.substr( 0, endpos );
 		s_new_queries.append("%3Cend%3E");
-		std::cout << "within controller :" << new_server << " - " << new_port << " - " << s_new_queries << std::endl;
+		
 		std::vector<std::string> v_new_inner;
 		v_new_inner.push_back(new_server);
 		v_new_inner.push_back(new_port);

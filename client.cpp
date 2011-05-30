@@ -2,7 +2,8 @@
 client::client(std::vector<std::vector<std::string> >v_args,int thread_counter) 
 	: v_args_(v_args), thread_counter_(thread_counter), response_count_(0), finished(false)
 {
-	std::cout << " starting new client in thread " << thread_counter_ <<  std::endl;
+	//std::cout << " starting new client in thread " << thread_counter_ <<  std::endl;
+	std::cout << "t" ;
 	for (unsigned int i=0;i<v_args_.size();++i)
 	{
 		client::start(v_args_.at(i));
@@ -78,7 +79,9 @@ void client::DoWriteRead(std::string server, std::string port, std::string path,
 	 std::string status_line;
 	 std::istream response_stream(&response);
 	 std::getline(response_stream, status_line);
-	 std::cout << "status_line: " << status_line << std::endl;
+
+	 //std::cout << "status_line: " << status_line << std::endl;
+	 std::cout << "." ;
 	 this_response->Set_Status_Line(status_line);
 	 boost::asio::read_until(*socket_, response, "\r\n\r\n");
 	 
