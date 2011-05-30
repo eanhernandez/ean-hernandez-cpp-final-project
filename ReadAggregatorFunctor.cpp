@@ -17,7 +17,7 @@ char* ReadAggregatorFunctor::GetFinalData()
 }
 bool ReadAggregatorFunctor::checkForEndOfTransMission()
 {
-	char* c = std::strstr(ReadAggregatorFunctor::final_data_,"%3Cend%3E");
-	if (c) {return true;}
+	std::string s = final_data_;
+	if (std::string::npos != s.find("%3Cend%3E")) {return true;}
 	else {return false;}
 }
