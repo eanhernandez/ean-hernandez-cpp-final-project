@@ -7,3 +7,5 @@ threads - session.hpp/.cpp, client.hpp/.cpp
 auto_ptr - session.hpp/.cpp, client.hpp/.cpp
 tuples - response.hpp/.cpp
 templated functions - argsparser.hpp/.cpp
+
+Main.cpp is the entry point, comments inline provide clarity about intent.
