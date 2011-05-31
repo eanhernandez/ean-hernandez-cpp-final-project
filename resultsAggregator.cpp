@@ -1,3 +1,4 @@
+// helper object for storing up multiple results from multiple clients
 #include "resultsAggregator.hpp"
 resultsAggregator::resultsAggregator() : response_count_(0)
 {}

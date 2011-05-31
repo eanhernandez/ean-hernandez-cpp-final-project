@@ -1,3 +1,4 @@
+// using the abstract factory pattern to build differentiate Response objects
 #ifndef ResponseAbstractFactory_h__
 #define ResponseAbstractFactory_h__
 #include "Response.hpp"

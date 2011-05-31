@@ -1,3 +1,10 @@
+/* 
+session is where most of the action occurs.  In this module, data is received from the 
+original querying server, chopped up into individual queries, split up amongst workers
+(if there are any) and sent of to workers in individual threads.  The results are waited
+for, received, counted, and placed into a response message, along with headers, for the 
+final reply to the querying server.
+*/
 #include "session.hpp"
 boost::mutex m;
 
@@ -10,11 +17,11 @@ session::session(boost::asio::io_service& io_service, int maxclients, int server
 void session::start()
 {
 	// reads data from this session's socket, calls handler
-
 	socket_.async_read_some(boost::asio::buffer(data_, max_length),
 		boost::bind(&session::handle_read, this,boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred)
 		);
 }
+// handler
 void session::handle_read(const boost::system::error_code& error, size_t bytes_transferred)
 {
 	// accumulating data from the reads
@@ -23,17 +30,19 @@ void session::handle_read(const boost::system::error_code& error, size_t bytes_t
 	// finds the "<end>" tag that indicates we are at the end of a transmission
 	if (raf_.checkForEndOfTransMission())  // TODO: Get rid of this, just read to EOF
 	{
+		// done reading
 		std::cout << "completed read" << std::endl;
 		handle_completed_read(max_read_data_);
 	}
 	else
-	{
+	{	// or not done reading
 		std::cout << "still reading" << std::endl;
 		socket_.async_read_some(boost::asio::buffer(raf_.GetFinalData(), max_length),
 			boost::bind(&session::handle_read, this,boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred)
 			);
 	}
 }
+// after all queries have been read in
 void session::handle_completed_read(size_t bytes_transferred)
 {
 	// chops up data from original request, stores as a list of queries
@@ -69,7 +78,8 @@ void session::handle_completed_read(size_t bytes_transferred)
 	// get all the different threads' responses from the aggregator (comes in a vector)
 	std::vector<std::string> v_all_responses = ra.getResponse();
 	
-	// this is what we'll send back to the querying system
+	// this is what we'll send back to the querying system, using an abstract 
+	// factory and autopointers do demonstrate usage.
 	std::auto_ptr<ResponseAbstractFactory> raf (new ResponseGoingFactory());
 	std::auto_ptr<Response> response_for_reply(raf->CreateResponse());
 
@@ -84,6 +94,7 @@ void session::handle_completed_read(size_t bytes_transferred)
 	// calculate and set standard headers
 	response_for_reply->setHeaders();
 
+	// get the entire response from the request
 	full_http_response = response_for_reply->GetResponseMessage();	// TODO: can I use move here?
 	//std::cout << " aggregate response : " << full_http_response << std::endl;
 	std::cout << std::endl << "processed " << ra.getResponseCount() << " queries in " << how_long_thess_queries_took << " seconds." << std::endl;
@@ -92,9 +103,14 @@ void session::handle_completed_read(size_t bytes_transferred)
         boost::bind(&session::handle_write, this, boost::asio::placeholders::error)
 		);
 }
+// this is in the thread
 void session::spawnClients(resultsAggregator& ra, std::vector<std::vector<std::string> >v_args, int thread_counter)
 {
+	// clients talk to the remote server
 	client c(v_args,thread_counter);	
+	// the client doesn't really return a value, and I noticed race conditions.  So, I added a 
+	// member (c.finished) to client that indicates whether it is 100% done receiving and 
+	// processing it's data.  We check this periodically to see if this thread is "done".
 	while (c.finished==false)
 	{
 		Sleep(200);
@@ -109,8 +125,8 @@ void session::handle_write(const boost::system::error_code& error)
 	{
 		std::cout << " error on async_write!!! " << std::endl;
 	}
-	// each session runs only once, now we close the 
 
+	// each session runs only once, now we try to shut everything down gracefully
 	boost::system::error_code ignored_ec;
 	socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
 	socket_.close();

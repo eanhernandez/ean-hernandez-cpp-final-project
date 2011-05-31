@@ -16,7 +16,6 @@
     <ClCompile Include="configuration_data.cpp" />
     <ClCompile Include="ReadAggregatorFunctor.cpp" />
     <ClCompile Include="Response.cpp" />
-    <ClCompile Include="ResponseAbstractFactory.cpp" />
     <ClCompile Include="resultsAggregator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="server.cpp" />
