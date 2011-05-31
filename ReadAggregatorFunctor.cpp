@@ -1,30 +1,19 @@
 // uses functor capabilities to accumulate data passed in by a querying server
 #include "ReadAggregatorFunctor.hpp"
-ReadAggregatorFunctor::ReadAggregatorFunctor() : max_read_data_(0){}
-void ReadAggregatorFunctor::operator ()(char* data, size_t bytes_transferred)
+ReadAggregatorFunctor::ReadAggregatorFunctor() {};
+void ReadAggregatorFunctor::operator ()(std::string data)
 {
-	// sets a null terminator at the size of the bytes transferred
-	data[bytes_transferred] = '\0';
-	int i=0;
-	// move through data up to null terminator, write this to internal storage char*
-	// starting from the last place we wrote to (based on max_read_data_)
-	while (data[i] != '\0')
-	{
-		ReadAggregatorFunctor::final_data_[ReadAggregatorFunctor::max_read_data_+i] = data[i];
-		i++;
-	}
-	// keep track of how much we've read
-	ReadAggregatorFunctor::max_read_data_ = i;
+	final_data_.append(data);
 }
 // getter
-char* ReadAggregatorFunctor::GetFinalData()
+const char* ReadAggregatorFunctor::GetFinalData()
 {
-	return ReadAggregatorFunctor::final_data_;
+	return final_data_.c_str();
 }
 // external procedures can use this to know if we've reached the end of this transmission
 bool ReadAggregatorFunctor::checkForEndOfTransMission()
 {
 	std::string s = final_data_;
-	if (std::string::npos != s.find("%3Cend%3E")) {return true;}
+	if (std::string::npos != s.find("\r\n\r\n")) {return true;}
 	else {return false;}
 }

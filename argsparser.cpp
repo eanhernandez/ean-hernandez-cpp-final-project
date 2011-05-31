@@ -1,6 +1,6 @@
 #include "argsparser.hpp"
 
-argsParser::argsParser(char* s, int server_type,configuration_data config) 
+argsParser::argsParser(const char* s, int server_type,configuration_data config) 
 	: s_(s), server_type_(server_type)
 {
 	// chopping up received query
@@ -32,9 +32,9 @@ int argsParser::getArgsCount()
 //gets rid of everything but the argument line
 void argsParser::narrowToArgLine()
 {
-    s_ = s_.substr(0,s_.find("\n"));	// get first line from request, dumping headers, etc
-    s_ = s_.substr(0,s_.find("%3Cend%3E"));	// get rid of "HTTP/1.1 at the end of the line 
+    s_ = s_.substr(0,s_.find("HTTP/1.1"));	// get rid of "HTTP/1.1 at the end of the line 
     s_ = s_.substr(s_.find("/")+1);		// get rid of GET and leading "/" at the beginning of the line
+	s_ = s_.substr(0,s_.length()-1);	// get rid of trailing space
 }
 
 //splits up argument line and places each subquery in a vector element

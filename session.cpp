@@ -10,40 +10,39 @@ boost::mutex m;
 
 session::session(boost::asio::io_service& io_service, int maxclients, int server_type, configuration_data config) 
 	: socket_(io_service), maxclients_(maxclients) , server_type_(server_type), 
-	config_(config), max_read_data_(0), raf_(ReadAggregatorFunctor())
+	config_(config),  raf_(ReadAggregatorFunctor())
 {	
 	std::cout << " new session " << std::endl; 
 }
 void session::start()
 {
-	// reads data from this session's socket, calls handler
-	socket_.async_read_some(boost::asio::buffer(data_, max_length),
-		boost::bind(&session::handle_read, this,boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred)
-		);
-}
-// handler
-void session::handle_read(const boost::system::error_code& error, size_t bytes_transferred)
-{
-	// accumulating data from the reads
-	raf_(data_, bytes_transferred);  
+	boost::asio::streambuf this_request;
+	// reading until the end of the status line
+	boost::asio::read_until(socket_, this_request, "\r\n");
+	std::string status_line;
+	std::istream response_stream(&this_request);
+	std::getline(response_stream, status_line);
 
-	// finds the "<end>" tag that indicates we are at the end of a transmission
-	if (raf_.checkForEndOfTransMission())  // TODO: Get rid of this, just read to EOF
+	// storing status line in the read aggregator, notice it is a functor 
+	raf_(status_line);
+	// reading until the end of the headers
+	boost::asio::read_until(socket_, this_request, "\r\n\r\n");
+
+	std::string header;
+	// storing headers in the read aggregator, notice it is a functor
+	while (std::getline(response_stream, header) && header != "\r")
 	{
-		// done reading
-		std::cout << "completed read" << std::endl;
-		handle_completed_read(max_read_data_);
+		raf_(header);
+		header.clear();
 	}
-	else
-	{	// or not done reading
-		std::cout << "still reading" << std::endl;
-		socket_.async_read_some(boost::asio::buffer(raf_.GetFinalData(), max_length),
-			boost::bind(&session::handle_read, this,boost::asio::placeholders::error,boost::asio::placeholders::bytes_transferred)
-			);
-	}
+
+	// done reading... we don't care about the body
+	std::cout << "completed read" << std::endl;
+
+	handle_completed_read();
 }
 // after all queries have been read in
-void session::handle_completed_read(size_t bytes_transferred)
+void session::handle_completed_read()
 {
 	// chops up data from original request, stores as a list of queries
 	argsParser a(raf_.GetFinalData(),server_type_,config_);

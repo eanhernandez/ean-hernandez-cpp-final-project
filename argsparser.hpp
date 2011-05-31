@@ -17,7 +17,7 @@ using boost::asio::ip::tcp;
 class argsParser
 {
 public:
-      argsParser(char* s, int server_type, configuration_data config);
+      argsParser(const char* s, int server_type, configuration_data config);
 	  int getArgsCount();	// this is for after any worker refactoring
 	  int GetTotalArgs();	// this is for total args passed into the parser
 	  void narrowToArgLine();
