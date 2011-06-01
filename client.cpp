@@ -32,7 +32,8 @@ void client::start(std::vector<std::string> v_inner)
 	catch (std::exception e)
 	{
 		// if there is a problem, shut this client down gracefully
-		std::cout << " error getting connected. closing socket and recording error" << std::endl;
+		//std::cout << " error getting connected. closing socket and recording error" << std::endl;
+		std::cout << "e";
 		socket_->close();
 		response_body_ = "error";
 		finished = true;
@@ -45,7 +46,8 @@ void client::start(std::vector<std::string> v_inner)
 	catch (std::exception e)
 	{
 		// again any problems are caught and we close down the client gracefully
-		std::cout << " error getting data from remote server. closing socket and recording error ( " << e.what() << " )" << std::endl;
+		//std::cout << " error getting data from remote server. closing socket and recording error ( " << e.what() << " )" << std::endl;
+		std::cout << "e";
 		socket_->close();
 		response_body_ = "error";
 		finished = true;
