@@ -44,7 +44,7 @@ void client::start(std::vector<std::string> v_inner)
 	{
 		// if there is a problem, shut this client down gracefully
 		//std::cout << " error getting connected. closing socket and recording error" << std::endl;
-		std::cout << "e";
+		std::cout << "e" << std::flush;
 		socket_->close();
 		response_body_ = "error";
 		finished = true;
