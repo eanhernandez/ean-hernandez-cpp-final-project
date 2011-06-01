@@ -79,8 +79,13 @@ void session::handle_completed_read()
 	
 	// this is what we'll send back to the querying system, using an abstract 
 	// factory and autopointers do demonstrate usage.
+	//std::auto_ptr<ResponseAbstractFactory> raf (new ResponseGoingFactory());
+	//std::auto_ptr<Response> response_for_reply(raf->CreateResponse());
+
+	// template based abstract factory
 	std::auto_ptr<ResponseAbstractFactory> raf (new ResponseGoingFactory());
-	std::auto_ptr<Response> response_for_reply(raf->CreateResponse());
+	std::auto_ptr<Response> response_for_reply(raf->create<Response>());
+
 
 	// pull the response vector into a string and store in the response object
 	response_for_reply->Set_Body(std::accumulate(v_all_responses.begin(),v_all_responses.end(),std::string("")));	

@@ -11,6 +11,7 @@
 #include "Response.hpp"
 #include "ResponseAbstractFactory.hpp"
 
+
 using boost::asio::ip::tcp;
 
 class client

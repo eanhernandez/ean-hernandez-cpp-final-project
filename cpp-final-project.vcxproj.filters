@@ -71,6 +71,15 @@
     <ClInclude Include="configuration_data.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metautils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Typelist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".readme" />

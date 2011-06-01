@@ -1,5 +1,7 @@
 // handles all the work of talking to remote servers and getting their results
 #include "client.hpp"
+
+
 client::client(std::vector<std::vector<std::string> >v_args,int thread_counter) 
 	: v_args_(v_args), thread_counter_(thread_counter), response_count_(0), finished(false)
 {
@@ -19,9 +21,18 @@ void client::start(std::vector<std::string> v_inner)
 	tcp::socket* socket_ = new tcp::socket(client_io_service);
 
 	// a factory to create responses, again perhaps overkill, but demonstrates the use
-	// of the abstract factory pattern
+	// of the abstract factory pattern.
+	// 
+	// initially, I used the standard abstract factory pattern, which can be found 
+	// (unused) in the ResponseAbstractFactory.hpp header, but again to demonstrate
+	// usage, I modified this to use the template based abstract factory from lecture 16
+	//
+	//ResponseAbstractFactory* raf = new ResponseComingFactory();
+	//Response* this_response = raf->create<Response>();
+
+	// template based abstract factory
 	std::auto_ptr<ResponseAbstractFactory> raf (new ResponseComingFactory());
-	std::auto_ptr<Response> this_response(raf->CreateResponse());
+	std::auto_ptr<Response> this_response(raf->create<Response>());
 
 	try
 	{

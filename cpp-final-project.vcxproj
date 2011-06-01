@@ -25,12 +25,15 @@
     <ClInclude Include="argsparser.hpp" />
     <ClInclude Include="client.hpp" />
     <ClInclude Include="configuration_data.hpp" />
+    <ClInclude Include="Factory.h" />
+    <ClInclude Include="metautils.h" />
     <ClInclude Include="Response.hpp" />
     <ClInclude Include="ReadAggregatorFunctor.hpp" />
     <ClInclude Include="ResponseAbstractFactory.hpp" />
     <ClInclude Include="resultsAggregator.hpp" />
     <ClInclude Include="server.hpp" />
     <ClInclude Include="session.hpp" />
+    <ClInclude Include="Typelist.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".readme" />
