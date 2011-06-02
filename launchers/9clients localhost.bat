@@ -1,0 +1,9 @@
+start C:\Users\ean\data\school\c++\project\candidate1.1\Release\cpp-final-project.exe 82 20 1
+start C:\Users\ean\data\school\c++\project\candidate1.1\Release\cpp-final-project.exe 83 20 1
+start C:\Users\ean\data\school\c++\project\candidate1.1\Release\cpp-final-project.exe 84 20 1
+start C:\Users\ean\data\school\c++\project\candidate1.1\Release\cpp-final-project.exe 85 20 1
+start C:\Users\ean\data\school\c++\project\candidate1.1\Release\cpp-final-project.exe 86 20 1
+start C:\Users\ean\data\school\c++\project\candidate1.1\Release\cpp-final-project.exe 87 20 1
+start C:\Users\ean\data\school\c++\project\candidate1.1\Release\cpp-final-project.exe 88 20 1
+start C:\Users\ean\data\school\c++\project\candidate1.1\Release\cpp-final-project.exe 89 20 1
+start C:\Users\ean\data\school\c++\project\candidate1.1\Release\cpp-final-project.exe 90 20 1

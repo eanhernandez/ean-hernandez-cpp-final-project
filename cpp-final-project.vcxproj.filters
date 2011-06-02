@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="deploy_files">
+      <UniqueIdentifier>{16e1b641-d433-4f63-b682-eddc69397500}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="argsparser.cpp">
@@ -83,5 +86,29 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".readme" />
+    <None Include="launchers\1 server needs client .bat">
+      <Filter>deploy_files</Filter>
+    </None>
+    <None Include="launchers\9clients localhost.bat">
+      <Filter>deploy_files</Filter>
+    </None>
+    <None Include="launchers\1 standalone.bat">
+      <Filter>deploy_files</Filter>
+    </None>
+    <None Include="launchers\1client - .bat">
+      <Filter>deploy_files</Filter>
+    </None>
+    <None Include="launchers\3clients.bat">
+      <Filter>deploy_files</Filter>
+    </None>
+    <None Include="launchers\9 db 9 local.bat">
+      <Filter>deploy_files</Filter>
+    </None>
+    <None Include="launchers\win remote client.bat">
+      <Filter>deploy_files</Filter>
+    </None>
+    <None Include="launchers\win remote server- Copy.bat">
+      <Filter>deploy_files</Filter>
+    </None>
   </ItemGroup>
 </Project>

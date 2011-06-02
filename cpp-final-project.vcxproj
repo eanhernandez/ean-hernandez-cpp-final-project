@@ -37,6 +37,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".readme" />
+    <None Include="launchers\1 server needs client .bat" />
+    <None Include="launchers\1 standalone.bat" />
+    <None Include="launchers\1client - .bat" />
+    <None Include="launchers\3clients.bat" />
+    <None Include="launchers\9 db 9 local.bat" />
+    <None Include="launchers\9clients localhost.bat" />
+    <None Include="launchers\win remote client.bat" />
+    <None Include="launchers\win remote server- Copy.bat" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <Keyword>Win32Proj</Keyword>
