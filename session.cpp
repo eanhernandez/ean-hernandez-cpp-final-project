@@ -117,7 +117,8 @@ void session::spawnClients(resultsAggregator& ra, std::vector<std::vector<std::s
 	// processing it's data.  We check this periodically to see if this thread is "done".
 	while (c.finished==false)
 	{
-		Sleep(200);
+	//	Sleep(200);
+		boost::this_thread::sleep(boost::posix_time::millisec(200));
 	}
 	boost::lock_guard<boost::mutex> lock(m);
 	ra.setResponse(c.getResponseBody());

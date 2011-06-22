@@ -38,6 +38,7 @@ std::string Response::Get_Header(std::string s)
 	bool found = false;
 	std::string value;
 	// nice place for a lambda
+/*	no love for lambdas in g++ 4.4
 	std::for_each(v_headers_.begin(), v_headers_.end(), [&found, &s, &value](header_pair h)
 	{
 		if (std::get<0>(h) == s) 
@@ -47,6 +48,7 @@ std::string Response::Get_Header(std::string s)
 			found = true;
 		}
 	});
+
 	if (found)
 	{
 		return value;
@@ -55,6 +57,19 @@ std::string Response::Get_Header(std::string s)
 	{
 		return "";
 	}
+*/
+
+	for (int i=0;i<v_headers_.size();i++)
+	{
+		if (std::get<0>(v_headers_[i]) == s) 
+		{
+			// tuples tuples 
+			value = std::get<1>(v_headers_[i]);
+			return value;
+		}
+		return "";
+	}
+
 	
 }
 // setter
@@ -122,6 +137,7 @@ std::string SendableResponse::GetResponseMessage()
 
 	s = status_line_;
 	s.append("\r\n");
+/* 	no lambdas allowed...
 	std::for_each(v_headers_.begin(),v_headers_.end(),[&s](header_pair header_line)
 	{
 		s.append(std::get<0>(header_line));
@@ -130,6 +146,17 @@ std::string SendableResponse::GetResponseMessage()
 
 		s.append("\n");
 	});
+*/
+	for (int i=0;i<v_headers_.size();i++)
+	{
+		s.append(std::get<0>(v_headers_[i]));
+		s.append(": ");
+		s.append(std::get<1>(v_headers_[i]));
+
+		s.append("\n");
+	
+	} 
+
 	s.append("\r\n\r\n");
 	s.append(body_);	
 	s.append("\r");

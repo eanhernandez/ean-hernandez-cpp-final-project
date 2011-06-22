@@ -1,12 +1,12 @@
 TARGET=main
 CC=g++
-LDFLAGS= -static -pthread -I /usr/local/boost_1_46_1/ -std=gnu++0x -O0
-LIBS= -L /usr/local/boost_1_46_1/stage/lib/ -lboost_system -lboost_thread
+LDFLAGS= -pthread -I /usr/local/boost_1_46_1/ -std=gnu++0x -O0
+LIBS= -L /usr/local/boost_1_46_1/stage/lib/ -lboost_system -lboost_thread -lboost_date_time
 
 all : clean $(TARGET) x
 
 $(TARGET) : argsparser.o client.o resultsAggregator.o server.o session.o configuration_data.o ReadAggregatorFunctor.o Response.o 
-	$(CC) $(LDFLAGS) -o $@ $@.cpp $^ $(LIBS) $(INCLDIR)
+	$(CC) $(LDFLAGS) $(LIBS) -o $@ $@.cpp $^ $(INCLDIR)
 
 argsparser.o : argsparser.cpp
 	$(CC) $(LDFLAGS) -c $<
