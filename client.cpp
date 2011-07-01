@@ -7,6 +7,7 @@ client::client(std::vector<std::vector<std::string> >v_args,int thread_counter)
 {
 	// let users know we've kicked off another thread
 	std::cout << "t" ;
+	std::cout.flush();
 	// for each of the queries this client must execute, kick off the process
 	for (unsigned int i=0;i<v_args_.size();++i)
 	{
@@ -44,7 +45,8 @@ void client::start(std::vector<std::string> v_inner)
 	{
 		// if there is a problem, shut this client down gracefully
 		//std::cout << " error getting connected. closing socket and recording error" << std::endl;
-		std::cout << "e" << std::flush;
+		std::cout << "e";
+		std::cout.flush();
 		socket_->close();
 		response_body_ = "error";
 		finished = true;
@@ -59,6 +61,7 @@ void client::start(std::vector<std::string> v_inner)
 		// again any problems are caught and we close down the client gracefully
 		//std::cout << " error getting data from remote server. closing socket and recording error ( " << e.what() << " )" << std::endl;
 		std::cout << "e";
+		std::cout.flush();
 		socket_->close();
 		response_body_ = "error";
 		finished = true;
@@ -109,6 +112,7 @@ void client::DoWriteRead(std::string server, std::string port, std::string path,
 	std::istream response_stream(&response);
 	std::getline(response_stream, status_line);
 	std::cout << "." ;
+	std::cout.flush();
 	// storing status line in the response object
 	this_response->Set_Status_Line(status_line);
 
