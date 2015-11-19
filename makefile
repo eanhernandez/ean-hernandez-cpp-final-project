@@ -1,6 +1,6 @@
 TARGET=mslmr
 CC=g++
-LDFLAGS= -I /usr/local/boost_1_46_1/ -std=gnu++0x -O0
+LDFLAGS= -I /usr/local/boost_1_46_1/ -std=gnu++0x -O0 -lm -lpthread
 LIBS= -L /usr/local/boost_1_46_1/stage/lib/ -lboost_system -lboost_thread -lboost_date_time
 
 all : clean $(TARGET) x
